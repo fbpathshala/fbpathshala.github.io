@@ -1,0 +1,39 @@
+name: Website Availability Monitor
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-availability-monitor
+  cancel-in-progress: true
+
+jobs:
+  check-site:
+    name: Check public website routes
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check homepage, exams, and study materials
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://fbpathshala.github.io/"
+            "https://fbpathshala.github.io/exam/"
+            "https://fbpathshala.github.io/study-material/"
+          )
+
+          for url in "${urls[@]}"; do
+            echo "Checking $url"
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --connect-timeout 15 --max-time 45 --retry 2 --retry-delay 5 "$url")"
+            echo "HTTP status: $code"
+            if [[ "$code" != "200" ]]; then
+              echo "::error::Expected HTTP 200 from $url, got $code"
+              exit 1
+            fi
+          done
