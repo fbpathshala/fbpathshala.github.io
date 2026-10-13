@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#102a43">
 <title>ফেইসবুক পাঠশালা — কেন্দ্রীয় অ্যাডমিন হোম</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/exam/js/supabase.js?v=20261013-central-login"></script>
 <style>
 :root{color-scheme:light;--ink:#14283f;--muted:#607086;--line:#e1e8f0;--blue:#2458d3;--bg:#f5f7fb}
 *{box-sizing:border-box}
@@ -16,6 +18,8 @@ header{background:linear-gradient(120deg,#102a43 0%,#164e63 100%);color:#fff;pad
 h1{font-size:clamp(23px,4vw,32px);margin:0;color:#fff}
 header p{margin:7px 0 0;color:#dbeafe;font-size:15px}
 main{padding:27px 0 44px}
+#centralLogin{width:min(440px,calc(100% - 32px));margin:28px auto 44px;background:#fff;border:1px solid var(--line);border-radius:17px;padding:24px;box-shadow:0 8px 24px #102a430b}
+#centralLogin h2{margin-bottom:8px}#centralLogin p{color:var(--muted);line-height:1.6}#centralLogin input{display:block;width:100%;padding:12px 13px;margin:12px 0;border:1px solid #b8c8d8;border-radius:9px;font:inherit;color:var(--ink);background:#fff}#centralLogin button{width:100%;padding:12px;border:0;border-radius:9px;background:var(--blue);color:#fff;font:700 15px inherit;cursor:pointer}#centralLogin button:disabled{opacity:.65}#centralLoginMsg{min-height:22px;font-size:14px;color:#b42318}#centralUser{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-bottom:14px;color:var(--muted);font-size:13px}#centralLogout{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;color:var(--ink);cursor:pointer}.central-hidden{display:none!important}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
 h2{margin:0;font-size:21px}
 .section-head p{margin:5px 0 0;color:var(--muted);line-height:1.6}
@@ -44,7 +48,9 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
 </head>
 <body>
 <header><div class="wrap"><div class="topline"><div class="logo" aria-hidden="true">🏫</div><div><h1>ফেইসবুক পাঠশালা</h1><p>কেন্দ্রীয় অ্যাডমিন হোমপেজ</p></div></div></div></header>
-<main class="wrap">
+<section id="centralLogin" class="wrap" aria-labelledby="centralLoginTitle"><h2 id="centralLoginTitle">অ্যাডমিন লগইন</h2><p>সিস্টেমগুলোতে প্রবেশ করতে আপনার অ্যাডমিন ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।</p><form id="centralLoginForm"><input id="centralEmail" type="email" autocomplete="username" placeholder="Admin Email" required><input id="centralPassword" type="password" autocomplete="current-password" placeholder="Password" required><button id="centralLoginButton" type="submit">লগইন করুন</button><div id="centralLoginMsg" role="status" aria-live="polite"></div></form></section>
+<main class="wrap central-hidden" id="centralApp">
+  <div id="centralUser"><span id="centralUserEmail"></span><button id="centralLogout" type="button">লগআউট</button></div>
   <div class="section-head"><div><h2>আপনার সিস্টেমগুলো</h2><p>যে কাজটি করতে চান, সেই সিস্টেমের নিজস্ব অ্যাডমিন ড্যাশবোর্ডে প্রবেশ করুন।</p></div><span class="tag">কেন্দ্রীয় নেভিগেশন</span></div>
   <div class="grid">
     <section class="card active"><div class="card-top"><div class="icon" aria-hidden="true">📝</div><div><h3>এক্সাম সিস্টেম</h3><span class="status">চালু আছে</span></div></div><p>MCQ প্রশ্নব্যাংক, পরীক্ষা তৈরি ও পরিচালনা এবং ফলাফল ব্যবস্থাপনা।</p><a class="action" href="/exam/admin.html">এক্সাম ড্যাশবোর্ড খুলুন ↗</a></section>
@@ -54,6 +60,45 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
   </div>
   <aside class="lower"><div class="lower-title">প্রতিটি সিস্টেম আলাদা</div><p>এই পেজটি মূল ওয়েবসাইটের কেন্দ্রীয় প্রবেশদ্বার। প্রতিটি সিস্টেমের নিজস্ব URL, অ্যাডমিন ড্যাশবোর্ড ও পরিচালনার ব্যবস্থা থাকবে। নতুন সিস্টেম তৈরি হলে তার লিংক এখানে যুক্ত করা হবে।</p></aside>
 </main>
-<footer>ফেইসবুক পাঠশালা · কেন্দ্রীয় অ্যাডমিন</footer>
+<footer id="centralFooter" class="central-hidden">ফেইসবুক পাঠশালা · কেন্দ্রীয় অ্যাডমিন</footer>
+<script>
+(function(){
+  const loginPanel=document.getElementById('centralLogin');
+  const app=document.getElementById('centralApp');
+  const footer=document.getElementById('centralFooter');
+  const form=document.getElementById('centralLoginForm');
+  const msg=document.getElementById('centralLoginMsg');
+  const button=document.getElementById('centralLoginButton');
+  function showSession(session){
+    const ok=!!(session&&session.user);
+    loginPanel.classList.toggle('central-hidden',ok);
+    app.classList.toggle('central-hidden',!ok);
+    footer.classList.toggle('central-hidden',!ok);
+    document.getElementById('centralUserEmail').textContent=ok?(session.user.email||'অ্যাডমিন'): '';
+  }
+  async function init(){
+    if(!window.db||!window.db.auth){msg.textContent='লগইন সেবা লোড হয়নি। পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।';return;}
+    const {data,error}=await db.auth.getSession();
+    if(error){msg.textContent='সেশন যাচাই করা যায়নি। আবার চেষ্টা করুন।';return;}
+    showSession(data.session);
+    db.auth.onAuthStateChange(function(_event,session){showSession(session);});
+  }
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();msg.textContent='লগইন হচ্ছে...';button.disabled=true;
+    try{
+      const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('centralEmail').value.trim(),password:document.getElementById('centralPassword').value});
+      if(error) throw error;
+      showSession(data.session);document.getElementById('centralPassword').value='';
+    }catch(error){msg.textContent=error&&error.message?error.message:'লগইন করা যায়নি। ইমেইল ও পাসওয়ার্ড যাচাই করুন.';}
+    finally{button.disabled=false;}
+  });
+  document.getElementById('centralLogout').addEventListener('click',async function(){
+    const {error}=await db.auth.signOut();
+    if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return;}
+    msg.textContent='আপনি লগআউট করেছেন।';showSession(null);
+  });
+  init();
+})();
+</script>
 </body>
 </html>
