@@ -21,19 +21,48 @@ jobs:
       - name: Check homepage, exams, and study materials
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
           urls=(
             "https://fbpathshala.github.io/"
             "https://fbpathshala.github.io/exam/"
             "https://fbpathshala.github.io/study-material/"
           )
+          failed=0
 
           for url in "${urls[@]}"; do
             echo "Checking $url"
-            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --connect-timeout 15 --max-time 45 --retry 2 --retry-delay 5 "$url")"
-            echo "HTTP status: $code"
-            if [[ "$code" != "200" ]]; then
-              echo "::error::Expected HTTP 200 from $url, got $code"
-              exit 1
+            error_file="$(mktemp)"
+            set +e
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --connect-timeout 15 --max-time 45 --retry 2 --retry-delay 5 "$url" 2>"$error_file")"
+            curl_exit=$?
+            set -e
+
+            if [[ "$curl_exit" -ne 0 ]]; then
+              case "$curl_exit" in
+                5|6)
+                  echo "::error::DNS error for $url (curl exit $curl_exit)."
+                  ;;
+                7|28|35|52|55|56)
+                  echo "::error::Connection/TLS/timeout error for $url (curl exit $curl_exit)."
+                  ;;
+                *)
+                  echo "::error::Request/network error for $url (curl exit $curl_exit)."
+                  ;;
+              esac
+              cat "$error_file"
+              failed=1
+            elif [[ "$code" != "200" ]]; then
+              echo "::error::HTTP error for $url: expected 200, got $code."
+              failed=1
+            else
+              echo "OK: $url returned HTTP 200."
             fi
+
+            rm -f "$error_file"
           done
+
+          if [[ "$failed" -ne 0 ]]; then
+            echo "::error::One or more website checks failed."
+            exit 1
+          fi
+          echo "All website routes returned HTTP 200."
