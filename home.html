@@ -39,6 +39,7 @@ a.action,span.action{display:inline-flex;align-items:center;justify-content:cent
 a.action{background:var(--blue);color:#fff}
 a.action:hover{background:#1d46b0}
 span.action{background:#eef2f8;color:#40536b}
+.clockbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}.clockbox{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 16px}.clockbox span{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.clockbox strong{font-size:17px}.card .subnav{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}.subnav a{font-size:12px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink);background:#f8fafc}.subnav a:hover{background:#eaf1ff;border-color:#bfd0fa}@media(max-width:620px){.clockbar{grid-template-columns:1fr}.clockbox{padding:11px 13px}}
 .lower{margin-top:20px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px 19px}
 .lower-title{font-weight:750;margin-bottom:5px}
 .lower p{margin:0;color:var(--muted);font-size:14px;line-height:1.75}
@@ -50,15 +51,17 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
 <header><div class="wrap"><div class="topline"><div class="logo" aria-hidden="true">🏫</div><div><h1>ফেইসবুক পাঠশালা</h1><p>কেন্দ্রীয় অ্যাডমিন হোমপেজ</p></div></div></div></header>
 <section id="centralLogin" class="wrap" aria-labelledby="centralLoginTitle"><h2 id="centralLoginTitle">অ্যাডমিন লগইন</h2><p>সিস্টেমগুলোতে প্রবেশ করতে আপনার অ্যাডমিন ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।</p><form id="centralLoginForm"><input id="centralEmail" type="email" autocomplete="username" placeholder="Admin Email" required><input id="centralPassword" type="password" autocomplete="current-password" placeholder="Password" required><button id="centralLoginButton" type="submit">লগইন করুন</button><div id="centralLoginMsg" role="status" aria-live="polite"></div></form></section>
 <main class="wrap central-hidden" id="centralApp">
+  <section class="clockbar" aria-label="তারিখ ও সময়"><div class="clockbox"><span>বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div><div class="clockbox"><span>English date</span><strong id="englishDate">Loading…</strong></div><div class="clockbox"><span>বার ও বর্তমান সময়</span><strong><span id="todayDay" style="display:inline;color:inherit;font-size:inherit;margin:0">লোড হচ্ছে…</span> · <span id="liveTime" style="display:inline;color:inherit;font-size:inherit;margin:0">--:--:--</span></strong></div></section>
   <div id="centralUser"><span id="centralUserEmail"></span><button id="centralLogout" type="button">লগআউট</button></div>
   <div class="section-head"><div><h2>আপনার সিস্টেমগুলো</h2><p>যে কাজটি করতে চান, সেই সিস্টেমের নিজস্ব অ্যাডমিন ড্যাশবোর্ডে প্রবেশ করুন।</p></div><span class="tag">কেন্দ্রীয় নেভিগেশন</span></div>
   <div class="grid">
-    <section class="card active"><div class="card-top"><div class="icon" aria-hidden="true">📝</div><div><h3>এক্সাম সিস্টেম</h3><span class="status">চালু আছে</span></div></div><p>MCQ প্রশ্নব্যাংক, পরীক্ষা তৈরি ও পরিচালনা এবং ফলাফল ব্যবস্থাপনা।</p><a class="action" href="/exam/dashboard.html">এক্সাম ড্যাশবোর্ড খুলুন ↗</a></section>
-    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">📚</div><div><h3>স্টাডি মেটেরিয়াল</h3><span class="status pending">পরে যুক্ত হবে</span></div></div><p>নোট, PDF, ডকুমেন্ট ও অন্যান্য পড়ার উপকরণ আলাদাভাবে পরিচালনা।</p><span class="action">ড্যাশবোর্ড তৈরির অপেক্ষায়</span></section>
-    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">🎓</div><div><h3>একাডেমিক কেয়ার</h3><span class="status pending">পরে যুক্ত হবে</span></div></div><p>স্কুল-কলেজের পড়াশোনা, একাডেমিক MCQ, পরীক্ষা ও শিক্ষাসামগ্রী।</p><span class="action">ড্যাশবোর্ড তৈরির অপেক্ষায়</span></section>
-    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">📌</div><div><h3>গুরুত্বপূর্ণ পোস্ট ও লিংক</h3><span class="status pending">পরে যুক্ত হবে</span></div></div><p>গুরুত্বপূর্ণ পোস্ট, সংরক্ষিত লিংক এবং Facebook গ্রুপ ও পেজের লিংক।</p><span class="action">মডিউল তৈরির অপেক্ষায়</span></section>
+    <section class="card active"><div class="card-top"><div class="icon" aria-hidden="true">🧭</div><div><h3>Job Care</h3><span class="status">সিস্টেম সংযুক্ত</span></div></div><p>চাকরির প্রস্তুতির প্রশ্ন তৈরি, প্রশ্নব্যাংক, পরীক্ষা তৈরি, পরীক্ষা পরিচালনা ও ফলাফল পর্যালোচনা।</p><div class="subnav"><a href="/exam/dashboard.html">প্রশ্ন ও পরীক্ষা সিস্টেম খুলুন ↗</a></div></section>
+    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">🎓</div><div><h3>Academic Care</h3><span class="status">সিস্টেম সংযুক্ত</span></div></div><p>একাডেমিক MCQ/CQ প্রশ্ন, পরীক্ষা পরিচালনা, উত্তর মূল্যায়ন ও ফলাফল ব্যবস্থাপনা।</p><div class="subnav"><a href="/academic/admin.html">Academic Care খুলুন ↗</a></div></section>
+    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">📚</div><div><h3>Study Material</h3><span class="status pending">একীভূতকরণের কাজ বাকি</span></div></div><p>নোট, PDF, ডকুমেন্ট ও পড়াশোনার সহায়ক উপকরণ। বিদ্যমান স্টাডি ম্যাটেরিয়াল সিস্টেম অক্ষত রেখে এক জায়গায় আনা হবে।</p><div class="subnav"><a href="/study-material/">Study Material খুলুন ↗</a></div></section>
+    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">📌</div><div><h3>গুরুত্বপূর্ণ তথ্য ও লিংক</h3><span class="status pending">পরিচালনা মডিউল বাকি</span></div></div><p>গুরুত্বপূর্ণ ঘোষণা, দরকারি ওয়েবসাইট ও শিক্ষামূলক লিংক এক জায়গায় সাজানো হবে।</p><div class="subnav"><a href="/#important-links">গুরুত্বপূর্ণ লিংক দেখুন ↗</a></div></section>
+    <section class="card"><div class="card-top"><div class="icon" aria-hidden="true">👥</div><div><h3>Facebook Pathshala ও গ্রুপ লিংক</h3><span class="status">লিংক প্রস্তুত</span></div></div><p>অফিশিয়াল Facebook পেজ ও গ্রুপে প্রবেশ করুন।</p><div class="subnav"><a href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">Facebook Page ↗</a><a href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">Facebook Group ↗</a></div></section>
   </div>
-  <aside class="lower"><div class="lower-title">প্রতিটি সিস্টেম আলাদা</div><p>এই পেজটি মূল ওয়েবসাইটের কেন্দ্রীয় প্রবেশদ্বার। প্রতিটি সিস্টেমের নিজস্ব URL, অ্যাডমিন ড্যাশবোর্ড ও পরিচালনার ব্যবস্থা থাকবে। নতুন সিস্টেম তৈরি হলে তার লিংক এখানে যুক্ত করা হবে।</p></aside>
+  <aside class="lower"><div class="lower-title">কেন্দ্রীয় ড্যাশবোর্ডের পরবর্তী কাজ</div><p>এই নিরাপদ প্রাথমিক সংস্করণে বিদ্যমান সিস্টেমগুলোর লিংক অক্ষত রাখা হয়েছে। পরের ধাপে একই পেজে সাব-মেনু, বাস্তব ডেটাবেস পরিসংখ্যান, মোট ভিজিটর গণনা এবং পাবলিক নোটিশ পরিচালনা যুক্ত করা হবে—ডেটাবেস ও শিক্ষার্থীদের রেকর্ড যাচাই না করে কোনো পুরোনো সিস্টেম মুছে ফেলা হবে না।</p></aside>
 </main>
 <footer id="centralFooter" class="central-hidden">ফেইসবুক পাঠশালা · কেন্দ্রীয় অ্যাডমিন</footer>
 <script>
@@ -97,6 +100,14 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
     if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return;}
     msg.textContent='আপনি লগআউট করেছেন।';showSession(null);
   });
+  function updateClock(){
+    const now=new Date();
+    document.getElementById('banglaDate').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric',calendar:'bengali'}).format(now);
+    document.getElementById('englishDate').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'2-digit',month:'long',year:'numeric'}).format(now);
+    document.getElementById('todayDay').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now);
+    document.getElementById('liveTime').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
+  }
+  updateClock();setInterval(updateClock,1000);
   init();
 })();
 </script>
