@@ -46,13 +46,119 @@ span.action{background:#eef2f8;color:#40536b}
 .lower p{margin:0;color:var(--muted);font-size:14px;line-height:1.75}
 footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
 @media(max-width:620px){.grid{grid-template-columns:1fr}.card{min-height:205px;padding:19px}header{padding:25px 16px 30px}.wrap{width:calc(100% - 24px)}.section-head{align-items:flex-start;flex-direction:column}.tag{white-space:normal}.logo{flex-basis:52px;height:52px;border-radius:16px}#centralLogin{padding:20px}}
+
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 24px}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 5px 18px #102a4308;min-width:0}
+.stat-card .stat-label{display:block;color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:8px}
+.stat-card strong{font-size:clamp(22px,3vw,30px);letter-spacing:-.4px}
+.stat-card .stat-icon{font-size:22px;margin-bottom:8px}
+.stat-card.wide{grid-column:1/-1;background:linear-gradient(135deg,#eff6ff,#fff)}
+.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0 24px}
+.date-card{background:#ffffffdf;border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
+.date-card span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+.date-card strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+#centralUser{display:none!important}
+.menuLink{width:100%;border:0;background:transparent;text-align:left;font:inherit;cursor:pointer}
+.menuGroup{display:none;margin-top:6px;padding:9px;background:#f8fafc}
+.menuGroup.open{display:block}
+.menuGroup .menuSubLink{background:#fff}
+.menuLogout{width:100%;border:0;text-align:left;font:inherit;cursor:pointer;color:#b42318;background:#fff5f5}
+.menuLogout:hover{background:#fee2e2}
+@media(min-width:700px){.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.date-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:480px){.stats-grid{gap:8px}.stat-card{padding:12px}.date-grid{gap:8px}.date-card{padding:11px}}
+
+/* Central homepage visual refresh */
+:root{--ink:#132944;--muted:#61748b;--line:#e2eaf4;--blue:#2458d3;--bg:#f4f7fc}
+body{background:radial-gradient(ellipse at 5% 18%,#e5edff 0,transparent 34%),radial-gradient(ellipse at 95% 42%,#e5f7f3 0,transparent 28%),#f5f8fd}
+header{padding:22px 20px 26px;background:linear-gradient(118deg,#122f69 0%,#2458d3 54%,#087e83 100%)}
+header:after{width:370px;height:370px;right:-110px;top:-220px}
+main.wrap{padding-top:24px}
+.welcome-panel{position:relative;display:flex;align-items:center;justify-content:space-between;gap:22px;overflow:hidden;margin:0 0 28px;padding:clamp(22px,4vw,38px);min-height:230px;border-radius:25px;color:#fff;background:linear-gradient(112deg,#102d63 0%,#2458d3 60%,#087e83 120%);box-shadow:0 18px 45px #173f7c24}
+.welcome-panel:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,#ffffff0a 30%,#ffffff0a 31%,transparent 31%,transparent 64%,#ffffff0b 64%,#ffffff0b 65%,transparent 65%);pointer-events:none}
+.welcome-copy{position:relative;z-index:2;max-width:620px}
+.welcome-eyebrow,.section-kicker{display:block;font-size:10px;font-weight:850;letter-spacing:1.6px;line-height:1.5}
+.welcome-eyebrow{color:#c7dcff;margin-bottom:11px}
+.welcome-copy h2{font-size:clamp(25px,4vw,37px);letter-spacing:-.6px;color:white;margin:0 0 9px}
+.welcome-copy p{max-width:520px;margin:0;color:#e1eaff;line-height:1.8;font-size:14px}
+.welcome-action{display:inline-flex;align-items:center;gap:14px;margin-top:20px;padding:12px 16px;border:1px solid #ffffff42;border-radius:12px;background:#ffffff1c;color:#fff;font:inherit;font-weight:750;cursor:pointer;box-shadow:inset 0 1px 0 #ffffff20;transition:background .18s,transform .18s}
+.welcome-action:hover{background:#ffffff30;transform:translateY(-1px)}
+.welcome-art{position:relative;flex:0 0 230px;width:230px;height:180px;display:grid;place-items:center}
+.art-orbit{position:absolute;border:1px solid #ffffff38;border-radius:50%;transform:rotate(-22deg)}
+.orbit-one{width:170px;height:170px}.orbit-two{width:220px;height:118px}
+.art-core{display:grid;place-items:center;width:88px;height:88px;border-radius:28px;background:linear-gradient(145deg,#ffffff40,#ffffff14);border:1px solid #ffffff62;font-size:42px;box-shadow:0 12px 30px #001b4730;backdrop-filter:blur(8px)}
+.art-chip{position:absolute;padding:7px 10px;border-radius:10px;border:1px solid #ffffff36;background:#ffffff20;color:#fff;font-size:11px;font-weight:750;white-space:nowrap;box-shadow:0 6px 18px #001b4720}
+.chip-one{top:5px;left:0}.chip-two{right:-3px;top:67px}.chip-three{bottom:2px;left:24px}
+.section-caption{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 0 13px}
+.section-caption h2{font-size:20px;letter-spacing:-.2px;margin:3px 0 0}
+.section-kicker{color:#7b8ba2;font-size:9px;letter-spacing:1.4px}
+.live-pill{display:inline-flex;align-items:center;gap:7px;color:#087e68;background:#e5f8f1;border:1px solid #c8eee1;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.live-pill i{width:7px;height:7px;border-radius:50%;background:#10a77b;box-shadow:0 0 0 3px #10a77b20}
+.date-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:11px;margin:0 0 30px}
+.date-card{position:relative;overflow:hidden;background:#ffffffeb;border:1px solid #e3eaf4;border-radius:17px;padding:16px 14px;min-height:104px;box-shadow:0 7px 20px #173f7c07;transition:transform .18s,border-color .18s,box-shadow .18s}
+.date-card:hover{transform:translateY(-2px);border-color:#c5d5f4;box-shadow:0 12px 24px #173f7c10}
+.date-card span{font-size:11px;line-height:1.55;color:#708198;margin-bottom:8px}
+.date-card strong{font-size:15px;line-height:1.55;color:#1b3454}
+.stats-caption{margin-top:2px}
+.stats-note{color:#8391a4;font-size:11px}
+.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:30px}
+.stat-card{position:relative;overflow:hidden;border:1px solid #e2eaf4;border-radius:18px;padding:17px;background:linear-gradient(155deg,#fff 0%,#fbfdff 100%);box-shadow:0 8px 24px #173f7c07;transition:transform .18s,border-color .18s,box-shadow .18s}
+.stat-card:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-40px;bottom:-48px;background:#edf3ff;pointer-events:none}
+.stat-card:hover{transform:translateY(-2px);border-color:#c6d6f5;box-shadow:0 12px 26px #173f7c10}
+.stat-card .stat-icon{position:relative;z-index:1;display:grid;place-items:center;width:39px;height:39px;margin:0 0 13px;border-radius:12px;background:#edf3ff;font-size:20px}
+.stat-card:nth-child(2) .stat-icon,.stat-card:nth-child(6) .stat-icon{background:#e5f8f1}
+.stat-card:nth-child(3) .stat-icon,.stat-card:nth-child(4) .stat-icon{background:#fff4df}
+.stat-card:nth-child(5) .stat-icon{background:#f2eaff}
+.stat-card .stat-label{position:relative;z-index:1;font-size:12px;min-height:38px;margin-bottom:7px;color:#687a90}
+.stat-card strong{position:relative;z-index:1;display:block;font-size:clamp(23px,2.4vw,30px);font-weight:850;letter-spacing:-.7px;color:#183a68}
+.stat-card.wide{grid-column:auto;background:linear-gradient(145deg,#eaf2ff,#fff);border-color:#d7e4fc}
+.menuPanel{padding:22px;background:#f8faff}
+.menuHead{padding-bottom:17px;margin-bottom:10px}
+.menuGroup{margin:3px 0 10px;padding:8px;border:1px solid #e4ebf5;border-radius:12px;background:#eef3fb}
+.menuLink{padding:13px 12px;border-radius:10px;font-weight:800;color:#1b3558}
+.menuLink:hover{background:#e8efff}
+.menuGroup.open{display:block;animation:submenu-in .16s ease-out}
+.menuSubLink{padding:11px 12px;margin-top:5px;border:1px solid #e8eef8;border-radius:9px;background:#fff!important;color:#2a4e80}
+.menuSubLink:hover{background:#eaf1ff!important;border-color:#cbdafa}
+.menuLogout{margin-top:17px;border:1px solid #ffe0e0;border-radius:11px;padding:13px 12px}
+@keyframes submenu-in{from{opacity:.5;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){.date-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.welcome-art{flex-basis:190px;width:190px}}
+@media(max-width:620px){main.wrap{padding-top:16px}.welcome-panel{padding:23px 20px;min-height:0;border-radius:21px}.welcome-art{flex-basis:94px;width:94px;height:110px;opacity:.92}.art-core{width:60px;height:60px;border-radius:19px;font-size:30px}.orbit-one{width:94px;height:94px}.orbit-two{width:110px;height:58px}.art-chip{font-size:9px;padding:5px 6px}.chip-one{top:0;left:-8px}.chip-two{right:-13px;top:42px}.chip-three{bottom:0;left:-1px}.welcome-copy h2{font-size:25px}.welcome-copy p{font-size:13px}.welcome-eyebrow{font-size:8px;letter-spacing:1px}.section-caption h2{font-size:18px}.date-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.date-card{padding:13px;min-height:96px}.date-card strong{font-size:14px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat-card{padding:13px;border-radius:15px}.stat-card .stat-label{font-size:11px;min-height:34px}.stat-card strong{font-size:25px}.stat-card.wide{grid-column:1/-1}.stats-note{display:none}}
+@media(max-width:380px){.welcome-art{display:none}.welcome-copy h2{font-size:24px}.date-card{padding:11px}.date-card span{font-size:10px}.stat-card strong{font-size:23px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 <header><div class="wrap"><div class="topline"><div class="logo" aria-hidden="true">🏫</div><div class="topline-copy"><h1>ফেইসবুক পাঠশালা</h1><p>কেন্দ্রীয় অ্যাডমিন হোমপেজ</p></div><button class="menuBtn" id="homeMenuButton" type="button" aria-label="মেনু খুলুন" aria-expanded="false" aria-controls="homeMenu">☰</button></div></div></header>
 <section id="centralLogin" class="wrap" aria-labelledby="centralLoginTitle"><h2 id="centralLoginTitle">অ্যাডমিন লগইন</h2><p>সিস্টেমগুলোতে প্রবেশ করতে আপনার অ্যাডমিন ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।</p><form id="centralLoginForm"><input id="centralEmail" type="email" autocomplete="username" placeholder="Admin Email" required><input id="centralPassword" type="password" autocomplete="current-password" placeholder="Password" required><button id="centralLoginButton" type="submit">লগইন করুন</button><div id="centralLoginMsg" role="status" aria-live="polite"></div></form></section>
 <main class="wrap central-hidden" id="centralApp">
-  <section class="clockbar" aria-label="তারিখ ও সময়"><div class="clockbox"><span>বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div><div class="clockbox"><span>English date</span><strong id="englishDate">Loading…</strong></div><div class="clockbox"><span>বার ও বর্তমান সময়</span><strong><span id="todayDay" style="display:inline;color:inherit;font-size:inherit;margin:0">লোড হচ্ছে…</span> · <span id="liveTime" style="display:inline;color:inherit;font-size:inherit;margin:0">--:--:--</span></strong></div></section>
+  <section class="welcome-panel" aria-label="কেন্দ্রীয় ড্যাশবোর্ড পরিচিতি">
+    <div class="welcome-copy">
+      <span class="welcome-eyebrow">CENTRAL ADMIN · FACEBOOK PATHSHALA</span>
+      <h2>সব সেবা, এক ঠিকানায়</h2>
+      <p>প্রথমে মেনু থেকে বিভাগ বেছে নিন, তারপর প্রয়োজনীয় কাজটি খুলুন। প্রতিটি ধাপ আলাদা ও গুছানো থাকবে।</p>
+      <button class="welcome-action" type="button" id="welcomeOpenMenu">☰ বিভাগ নির্বাচন করুন <span aria-hidden="true">↗</span></button>
+    </div>
+    <div class="welcome-art" aria-hidden="true"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-core">🏫</div><span class="art-chip chip-one">🧭 Job Care</span><span class="art-chip chip-two">🎓 Academic</span><span class="art-chip chip-three">📚 Study</span></div>
+  </section>
+  <div class="section-caption"><div><span class="section-kicker">TODAY AT A GLANCE</span><h2>আজকের সময় ও তারিখ</h2></div><span class="live-pill"><i></i> লাইভ আপডেট</span></div>
+  <section class="date-grid" aria-label="আজকের সময় ও তারিখ">
+    <div class="date-card"><span>🕒 আজকের বার ও সময়</span><strong><span id="todayDay">লোড হচ্ছে…</span> · <span id="liveTime">--:--:--</span></strong></div>
+    <div class="date-card"><span>📅 ইংরেজি তারিখ</span><strong id="englishDate">Loading…</strong></div>
+    <div class="date-card"><span>🌾 বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div>
+    <div class="date-card"><span>🌙 হিজরি তারিখ</span><strong id="hijriDate">লোড হচ্ছে…</strong></div>
+    <div class="date-card"><span>🌡️ বর্তমান তাপমাত্রা · চট্টগ্রাম</span><strong id="temperature">লোড হচ্ছে…</strong></div>
+  </section>
+  <div class="section-caption stats-caption"><div><span class="section-kicker">SYSTEM OVERVIEW</span><h2>📊 সিস্টেমের পরিসংখ্যান</h2></div><span class="stats-note">ডেটাবেস থেকে প্রাপ্ত তথ্য</span></div>
+  <section class="stats-grid" aria-label="সিস্টেম পরিসংখ্যান">
+    <div class="stat-card"><div class="stat-icon">🧭</div><span class="stat-label">Job Care-এর মোট প্রশ্ন</span><strong id="jobQuestionCount">—</strong></div>
+    <div class="stat-card"><div class="stat-icon">🎓</div><span class="stat-label">Academic Care-এর মোট প্রশ্ন</span><strong id="academicQuestionCount">—</strong></div>
+    <div class="stat-card"><div class="stat-icon">👥</div><span class="stat-label">Job Care-এর মোট অংশগ্রহণ</span><strong id="jobStudentCount">—</strong></div>
+    <div class="stat-card"><div class="stat-icon">👥</div><span class="stat-label">Academic Care-এর মোট জমা উত্তর</span><strong id="academicStudentCount">—</strong></div>
+    <div class="stat-card"><div class="stat-icon">📝</div><span class="stat-label">Job Care-এর মোট পরীক্ষা</span><strong id="jobExamCount">—</strong></div>
+    <div class="stat-card"><div class="stat-icon">📚</div><span class="stat-label">Academic Care-এর মোট পরীক্ষা</span><strong id="academicExamCount">—</strong></div>
+    <div class="stat-card wide"><div class="stat-icon">📈</div><span class="stat-label">মোট ভিজিটর</span><strong id="totalVisitorCount">—</strong></div>
+  </section>
   <div id="centralUser"><span id="centralUserEmail"></span><button id="centralLogout" type="button">লগআউট</button></div>
   <div class="section-head"><div><h2>আপনার সিস্টেমগুলো</h2><p>যে কাজটি করতে চান, সেই সিস্টেমের নিজস্ব অ্যাডমিন ড্যাশবোর্ডে প্রবেশ করুন।</p></div><span class="tag">কেন্দ্রীয় নেভিগেশন</span></div>
   <div class="grid">
@@ -64,7 +170,20 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
   </div>
   <aside class="lower"><div class="lower-title">কেন্দ্রীয় ড্যাশবোর্ডের পরবর্তী কাজ</div><p>এই নিরাপদ প্রাথমিক সংস্করণে বিদ্যমান সিস্টেমগুলোর লিংক অক্ষত রাখা হয়েছে। পরের ধাপে একই পেজে সাব-মেনু, বাস্তব ডেটাবেস পরিসংখ্যান, মোট ভিজিটর গণনা এবং পাবলিক নোটিশ পরিচালনা যুক্ত করা হবে—ডেটাবেস ও শিক্ষার্থীদের রেকর্ড যাচাই না করে কোনো পুরোনো সিস্টেম মুছে ফেলা হবে না।</p></aside>
 </main>
-<div class="menuOverlay" id="homeMenu" aria-hidden="true"><nav class="menuPanel" aria-label="কেন্দ্রীয় মেনু"><div class="menuHead"><strong>☰ ফেইসবুক পাঠশালা</strong><button class="menuClose" id="homeMenuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><a class="menuLink" href="/home.html">🏠 কেন্দ্রীয় হোমপেজ</a><div class="menuGroup"><div class="menuGroupTitle">🧭 Job Care · Exam System</div><p class="menuHint">চাকরির প্রস্তুতির প্রশ্নব্যাংক ও পরীক্ষা পরিচালনার সব কাজ।</p><a class="menuSubLink" href="/exam/">📝 পরীক্ষার সিস্টেম / পরীক্ষার তালিকা</a><a class="menuSubLink" href="/exam/question_create.html">প্রশ্ন তৈরি</a><a class="menuSubLink" href="/exam/question_bank.html">প্রশ্ন ব্যাংক</a><a class="menuSubLink" href="/exam/create-exam.html">পরীক্ষা তৈরি</a><a class="menuSubLink" href="/exam/exam-manager.html">পরীক্ষা পরিচালনা</a><a class="menuSubLink" href="/exam/results-review.html?version=20261012b">ফলাফল পর্যালোচনা</a></div><div class="menuGroup"><div class="menuGroupTitle">🎓 Academic Care</div><p class="menuHint">একাডেমিক MCQ/CQ প্রশ্ন, পরীক্ষা, উত্তর মূল্যায়ন ও ফলাফল ব্যবস্থাপনা।</p><a class="menuSubLink" href="/academic/admin.html">Academic Care খুলুন ↗</a></div><div class="menuGroup"><div class="menuGroupTitle">📚 Study Material</div><p class="menuHint">নোট, PDF, ডকুমেন্ট ও পড়াশোনার সহায়ক উপকরণ।</p><a class="menuSubLink" href="/study-material/">Study Material খুলুন ↗</a></div><div class="menuGroup"><div class="menuGroupTitle">📌 গুরুত্বপূর্ণ তথ্য ও লিংক</div><p class="menuHint">গুরুত্বপূর্ণ ঘোষণা ও দরকারি ওয়েবসাইটের লিংক।</p><a class="menuSubLink" href="/#important-links">গুরুত্বপূর্ণ লিংক দেখুন ↗</a></div><div class="menuGroup"><div class="menuGroupTitle">👥 Facebook Pathshala</div><a class="menuSubLink" href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">Facebook Page ↗</a><a class="menuSubLink" href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">Facebook Group ↗</a></div><p class="menuHint">মেনু থেকে যেকোনো বিভাগে দ্রুত প্রবেশ করুন। বিদ্যমান পরীক্ষা ও শিক্ষার্থীদের রেকর্ড অপরিবর্তিত থাকবে।</p></nav></div><footer id="centralFooter" class="central-hidden">ফেইসবুক পাঠশালা · কেন্দ্রীয় অ্যাডমিন</footer>
+<div class="menuOverlay" id="homeMenu" aria-hidden="true"><nav class="menuPanel" aria-label="কেন্দ্রীয় মেনু">
+<div class="menuHead"><strong>☰ ফেইসবুক পাঠশালা</strong><button class="menuClose" id="homeMenuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div>
+<button class="menuLink" type="button" data-section-toggle="jobSub" aria-controls="jobSub" aria-expanded="false">🧭 Job Care <span style="margin-left:auto">⌄</span></button>
+<div class="menuGroup" id="jobSub"><a class="menuSubLink" href="/exam/">পরীক্ষার তালিকা</a><a class="menuSubLink" href="/exam/question_create.html">প্রশ্ন তৈরি</a><a class="menuSubLink" href="/exam/question_bank.html">প্রশ্নব্যাংক</a><a class="menuSubLink" href="/exam/create-exam.html">পরীক্ষা তৈরি</a><a class="menuSubLink" href="/exam/exam-manager.html">পরীক্ষা পরিচালনা</a><a class="menuSubLink" href="/exam/results-review.html?version=20261012b">ফলাফল পর্যালোচনা</a></div>
+<button class="menuLink" type="button" data-section-toggle="academicSub" aria-controls="academicSub" aria-expanded="false">🎓 Academic Care <span style="margin-left:auto">⌄</span></button>
+<div class="menuGroup" id="academicSub"><a class="menuSubLink" href="/academic/admin.html?view=exams">পরীক্ষা তৈরি ও পরিচালনা</a><a class="menuSubLink" href="/academic/admin.html?view=questionBank">প্রশ্নব্যাংক / MCQ ও CQ প্রশ্ন</a><a class="menuSubLink" href="/academic/admin.html?view=reviews">উত্তর মূল্যায়ন ও ফলাফল</a><a class="menuSubLink" href="/academic/admin.html?view=materials">স্টাডি ম্যাটেরিয়াল</a><a class="menuSubLink" href="/academic/admin.html?view=settings">সিস্টেম সেটআপ</a></div>
+<button class="menuLink" type="button" data-section-toggle="studySub" aria-controls="studySub" aria-expanded="false">📚 Study Material <span style="margin-left:auto">⌄</span></button>
+<div class="menuGroup" id="studySub"><a class="menuSubLink" href="/study-material/">Study Material খুলুন</a></div>
+<button class="menuLink" type="button" data-section-toggle="linksSub" aria-controls="linksSub" aria-expanded="false">📌 গুরুত্বপূর্ণ তথ্য ও লিংক <span style="margin-left:auto">⌄</span></button>
+<div class="menuGroup" id="linksSub"><a class="menuSubLink" href="/#important-links">গুরুত্বপূর্ণ লিংক দেখুন</a></div>
+<button class="menuLink" type="button" data-section-toggle="facebookSub" aria-controls="facebookSub" aria-expanded="false">👥 Facebook Pathshala <span style="margin-left:auto">⌄</span></button>
+<div class="menuGroup" id="facebookSub"><a class="menuSubLink" href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">Facebook Page</a><a class="menuSubLink" href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">Facebook Group</a></div>
+<button class="menuLink menuLogout" id="menuLogout" type="button">🚪 Log Out</button>
+</nav></div><footer id="centralFooter" class="central-hidden">ফেইসবুক পাঠশালা · কেন্দ্রীয় অ্যাডমিন</footer>
 <script>
 (function(){
   const loginPanel=document.getElementById('centralLogin');
@@ -73,7 +192,8 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
   const form=document.getElementById('centralLoginForm');
   const msg=document.getElementById('centralLoginMsg');
   const button=document.getElementById('centralLoginButton');
-  const menu=document.getElementById("homeMenu");const menuButton=document.getElementById("homeMenuButton");const menuClose=document.getElementById("homeMenuClose");function openHomeMenu(){menu.classList.add("open");menu.setAttribute("aria-hidden","false");menuButton.setAttribute("aria-expanded","true");document.body.style.overflow="hidden";}function closeHomeMenu(){menu.classList.remove("open");menu.setAttribute("aria-hidden","true");menuButton.setAttribute("aria-expanded","false");document.body.style.overflow="";}menuButton.addEventListener("click",openHomeMenu);menuClose.addEventListener("click",closeHomeMenu);menu.addEventListener("click",function(e){if(e.target===menu)closeHomeMenu();});document.addEventListener("keydown",function(e){if(e.key==="Escape")closeHomeMenu();});menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",closeHomeMenu);});
+  const menu=document.getElementById("homeMenu");const menuButton=document.getElementById("homeMenuButton");const menuClose=document.getElementById("homeMenuClose");function openHomeMenu(){menu.classList.add("open");menu.setAttribute("aria-hidden","false");menuButton.setAttribute("aria-expanded","true");document.body.style.overflow="hidden";}function closeHomeMenu(){menu.classList.remove("open");menu.setAttribute("aria-hidden","true");menuButton.setAttribute("aria-expanded","false");document.body.style.overflow="";}menuButton.addEventListener("click",openHomeMenu);menuClose.addEventListener("click",closeHomeMenu);document.getElementById("welcomeOpenMenu").addEventListener("click",openHomeMenu);menu.addEventListener("click",function(e){if(e.target===menu)closeHomeMenu();});document.addEventListener("keydown",function(e){if(e.key==="Escape")closeHomeMenu();});menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",closeHomeMenu);});
+  function openRequestedSection(){const key=new URLSearchParams(window.location.search).get('section');const ids={job:'jobSub',academic:'academicSub',study:'studySub',links:'linksSub',facebook:'facebookSub'};const id=ids[key];if(!id)return;openHomeMenu();const btn=document.querySelector('[data-section-toggle="'+id+'"]');const panel=document.getElementById(id);if(btn&&panel){document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});panel.classList.add('open');btn.setAttribute('aria-expanded','true')}}
   function showSession(session){
     const ok=!!(session&&session.user);
     loginPanel.classList.toggle('central-hidden',ok);
@@ -86,14 +206,15 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
     const {data,error}=await db.auth.getSession();
     if(error){msg.textContent='সেশন যাচাই করা যায়নি। আবার চেষ্টা করুন।';return;}
     showSession(data.session);
-    db.auth.onAuthStateChange(function(_event,session){showSession(session);});
+    if(data.session){loadDashboardStats();openRequestedSection();}
+    db.auth.onAuthStateChange(function(_event,session){showSession(session);if(session)loadDashboardStats();});
   }
   form.addEventListener('submit',async function(e){
     e.preventDefault();msg.textContent='লগইন হচ্ছে...';button.disabled=true;
     try{
       const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('centralEmail').value.trim(),password:document.getElementById('centralPassword').value});
       if(error) throw error;
-      showSession(data.session);document.getElementById('centralPassword').value='';
+      showSession(data.session);loadDashboardStats();openRequestedSection();document.getElementById('centralPassword').value='';
     }catch(error){msg.textContent=error&&error.message?error.message:'লগইন করা যায়নি। ইমেইল ও পাসওয়ার্ড যাচাই করুন.';}
     finally{button.disabled=false;}
   });
@@ -106,10 +227,34 @@ footer{text-align:center;color:#7b8797;font-size:12px;padding:0 16px 24px}
     const now=new Date();
     document.getElementById('banglaDate').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric',calendar:'bengali'}).format(now);
     document.getElementById('englishDate').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'2-digit',month:'long',year:'numeric'}).format(now);
+    document.getElementById('hijriDate').textContent=new Intl.DateTimeFormat('bn-BD-u-ca-islamic-umalqura',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'}).format(now);
     document.getElementById('todayDay').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now);
     document.getElementById('liveTime').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
   }
-  updateClock();setInterval(updateClock,1000);
+  async function countRows(table){
+    try{const r=await db.from(table).select('id',{count:'exact',head:true});return r.error?null:(r.count||0)}catch(e){return null}
+  }
+  async function countFirst(tables){
+    for(const table of tables){const n=await countRows(table);if(n!==null)return n}return null;
+  }
+  function showCount(id,n){document.getElementById(id).textContent=n===null?'—':new Intl.NumberFormat('bn-BD').format(n)}
+  async function loadDashboardStats(){
+    const tasks=[
+      countRows('questions'),countRows('academic_care_questions'),
+      countRows('exam_attempts'),
+      countRows('academic_care_submissions'),countRows('exams'),countRows('academic_care_exams'),
+      countRows('site_visitors')
+    ];
+    const values=await Promise.all(tasks);
+    ['jobQuestionCount','academicQuestionCount','jobStudentCount','academicStudentCount','jobExamCount','academicExamCount','totalVisitorCount'].forEach((id,i)=>showCount(id,values[i]));
+  }
+  async function loadTemperature(){
+    const el=document.getElementById('temperature');
+    try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=22.3569&longitude=91.7832&current=temperature_2m&timezone=Asia%2FDhaka');if(!r.ok)throw Error('weather unavailable');const d=await r.json();el.textContent=Number(d.current.temperature_2m).toLocaleString('bn-BD')+'°C'}catch(e){el.textContent='এখন পাওয়া যাচ্ছে না'}
+  }
+  document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(!wasOpen){panel.classList.add('open');btn.setAttribute('aria-expanded','true')}})});
+  document.getElementById('menuLogout').addEventListener('click',async function(){closeHomeMenu();const {error}=await db.auth.signOut();if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return}msg.textContent='আপনি লগআউট করেছেন।';showSession(null)});
+  updateClock();setInterval(updateClock,1000);loadTemperature();setInterval(loadTemperature,600000);
   init();
 })();
 </script>
