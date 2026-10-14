@@ -172,15 +172,15 @@ main.wrap{padding-top:24px}
 </main>
 <div class="menuOverlay" id="homeMenu" aria-hidden="true"><nav class="menuPanel" aria-label="কেন্দ্রীয় মেনু">
 <div class="menuHead"><strong>☰ ফেইসবুক পাঠশালা</strong><button class="menuClose" id="homeMenuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div>
-<button class="menuLink" type="button" data-section-toggle="jobSub">🧭 Job Care <span style="margin-left:auto">⌄</span></button>
+<button class="menuLink" type="button" data-section-toggle="jobSub" aria-controls="jobSub" aria-expanded="false">🧭 Job Care <span style="margin-left:auto">⌄</span></button>
 <div class="menuGroup" id="jobSub"><a class="menuSubLink" href="/exam/">পরীক্ষার তালিকা</a><a class="menuSubLink" href="/exam/question_create.html">প্রশ্ন তৈরি</a><a class="menuSubLink" href="/exam/question_bank.html">প্রশ্নব্যাংক</a><a class="menuSubLink" href="/exam/create-exam.html">পরীক্ষা তৈরি</a><a class="menuSubLink" href="/exam/exam-manager.html">পরীক্ষা পরিচালনা</a><a class="menuSubLink" href="/exam/results-review.html?version=20261012b">ফলাফল পর্যালোচনা</a></div>
-<button class="menuLink" type="button" data-section-toggle="academicSub">🎓 Academic Care <span style="margin-left:auto">⌄</span></button>
+<button class="menuLink" type="button" data-section-toggle="academicSub" aria-controls="academicSub" aria-expanded="false">🎓 Academic Care <span style="margin-left:auto">⌄</span></button>
 <div class="menuGroup" id="academicSub"><a class="menuSubLink" href="/academic/admin.html#questionBank">প্রশ্নব্যাংক / MCQ ও CQ প্রশ্ন</a><a class="menuSubLink" href="/academic/admin.html#exams">পরীক্ষা তৈরি ও পরিচালনা</a><a class="menuSubLink" href="/academic/admin.html#reviews">উত্তর মূল্যায়ন ও ফলাফল</a></div>
-<button class="menuLink" type="button" data-section-toggle="studySub">📚 Study Material <span style="margin-left:auto">⌄</span></button>
+<button class="menuLink" type="button" data-section-toggle="studySub" aria-controls="studySub" aria-expanded="false">📚 Study Material <span style="margin-left:auto">⌄</span></button>
 <div class="menuGroup" id="studySub"><a class="menuSubLink" href="/study-material/">Study Material খুলুন</a></div>
-<button class="menuLink" type="button" data-section-toggle="linksSub">📌 গুরুত্বপূর্ণ তথ্য ও লিংক <span style="margin-left:auto">⌄</span></button>
+<button class="menuLink" type="button" data-section-toggle="linksSub" aria-controls="linksSub" aria-expanded="false">📌 গুরুত্বপূর্ণ তথ্য ও লিংক <span style="margin-left:auto">⌄</span></button>
 <div class="menuGroup" id="linksSub"><a class="menuSubLink" href="/#important-links">গুরুত্বপূর্ণ লিংক দেখুন</a></div>
-<button class="menuLink" type="button" data-section-toggle="facebookSub">👥 Facebook Pathshala <span style="margin-left:auto">⌄</span></button>
+<button class="menuLink" type="button" data-section-toggle="facebookSub" aria-controls="facebookSub" aria-expanded="false">👥 Facebook Pathshala <span style="margin-left:auto">⌄</span></button>
 <div class="menuGroup" id="facebookSub"><a class="menuSubLink" href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">Facebook Page</a><a class="menuSubLink" href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">Facebook Group</a></div>
 <button class="menuLink menuLogout" id="menuLogout" type="button">🚪 Log Out</button>
 </nav></div><footer id="centralFooter" class="central-hidden">ফেইসবুক পাঠশালা · কেন্দ্রীয় অ্যাডমিন</footer>
@@ -193,6 +193,7 @@ main.wrap{padding-top:24px}
   const msg=document.getElementById('centralLoginMsg');
   const button=document.getElementById('centralLoginButton');
   const menu=document.getElementById("homeMenu");const menuButton=document.getElementById("homeMenuButton");const menuClose=document.getElementById("homeMenuClose");function openHomeMenu(){menu.classList.add("open");menu.setAttribute("aria-hidden","false");menuButton.setAttribute("aria-expanded","true");document.body.style.overflow="hidden";}function closeHomeMenu(){menu.classList.remove("open");menu.setAttribute("aria-hidden","true");menuButton.setAttribute("aria-expanded","false");document.body.style.overflow="";}menuButton.addEventListener("click",openHomeMenu);menuClose.addEventListener("click",closeHomeMenu);document.getElementById("welcomeOpenMenu").addEventListener("click",openHomeMenu);menu.addEventListener("click",function(e){if(e.target===menu)closeHomeMenu();});document.addEventListener("keydown",function(e){if(e.key==="Escape")closeHomeMenu();});menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",closeHomeMenu);});
+  function openRequestedSection(){const key=new URLSearchParams(window.location.search).get('section');const ids={job:'jobSub',academic:'academicSub',study:'studySub',links:'linksSub',facebook:'facebookSub'};const id=ids[key];if(!id)return;openHomeMenu();const btn=document.querySelector('[data-section-toggle="'+id+'"]');const panel=document.getElementById(id);if(btn&&panel){document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});panel.classList.add('open');btn.setAttribute('aria-expanded','true')}}
   function showSession(session){
     const ok=!!(session&&session.user);
     loginPanel.classList.toggle('central-hidden',ok);
@@ -205,7 +206,7 @@ main.wrap{padding-top:24px}
     const {data,error}=await db.auth.getSession();
     if(error){msg.textContent='সেশন যাচাই করা যায়নি। আবার চেষ্টা করুন।';return;}
     showSession(data.session);
-    if(data.session)loadDashboardStats();
+    if(data.session){loadDashboardStats();openRequestedSection();}
     db.auth.onAuthStateChange(function(_event,session){showSession(session);if(session)loadDashboardStats();});
   }
   form.addEventListener('submit',async function(e){
@@ -213,7 +214,7 @@ main.wrap{padding-top:24px}
     try{
       const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('centralEmail').value.trim(),password:document.getElementById('centralPassword').value});
       if(error) throw error;
-      showSession(data.session);loadDashboardStats();document.getElementById('centralPassword').value='';
+      showSession(data.session);loadDashboardStats();openRequestedSection();document.getElementById('centralPassword').value='';
     }catch(error){msg.textContent=error&&error.message?error.message:'লগইন করা যায়নি। ইমেইল ও পাসওয়ার্ড যাচাই করুন.';}
     finally{button.disabled=false;}
   });
@@ -251,7 +252,7 @@ main.wrap{padding-top:24px}
     const el=document.getElementById('temperature');
     try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=22.3569&longitude=91.7832&current=temperature_2m&timezone=Asia%2FDhaka');if(!r.ok)throw Error('weather unavailable');const d=await r.json();el.textContent=Number(d.current.temperature_2m).toLocaleString('bn-BD')+'°C'}catch(e){el.textContent='এখন পাওয়া যাচ্ছে না'}
   }
-  document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(p=>p.classList.remove('open'));if(!wasOpen)panel.classList.add('open')})});
+  document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(!wasOpen){panel.classList.add('open');btn.setAttribute('aria-expanded','true')}})});
   document.getElementById('menuLogout').addEventListener('click',async function(){closeHomeMenu();const {error}=await db.auth.signOut();if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return}msg.textContent='আপনি লগআউট করেছেন।';showSession(null)});
   updateClock();setInterval(updateClock,1000);loadTemperature();setInterval(loadTemperature,600000);
   init();
