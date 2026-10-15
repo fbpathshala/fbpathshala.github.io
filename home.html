@@ -142,7 +142,7 @@ main.wrap{padding-top:24px}
     <div class="date-card"><span>📅 ইংরেজি তারিখ</span><strong id="englishDate">Loading…</strong></div>
     <div class="date-card"><span>🌾 বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div>
     <div class="date-card"><span>🌙 হিজরি তারিখ</span><strong id="hijriDate">লোড হচ্ছে…</strong></div>
-    <div class="date-card"><span>🌡️ বর্তমান তাপমাত্রা · চট্টগ্রাম</span><strong id="temperature">লোড হচ্ছে…</strong></div>
+    <div class="date-card"><span>🌡️ বর্তমান তাপমাত্রা</span><strong id="temperature">লোড হচ্ছে…</strong></div>
   </section>
   <div class="section-caption stats-caption"><div><span class="section-kicker">SYSTEM OVERVIEW</span><h2>📊 সিস্টেমের পরিসংখ্যান</h2></div><span class="stats-note">ডেটাবেস থেকে প্রাপ্ত তথ্য</span></div>
   <section class="stats-grid" aria-label="সিস্টেম পরিসংখ্যান">
@@ -309,17 +309,23 @@ main.wrap{padding-top:24px}
   }
   async function loadTemperature(){
     const el=document.getElementById('temperature');
-    if(!navigator.geolocation){el.textContent='এই ব্রাউজারে লোকেশন সাপোর্ট নেই';return}
-    el.textContent='লোকেশন নেওয়া হচ্ছে…';
-    navigator.geolocation.getCurrentPosition(async function(pos){
-      try{
-        const lat=pos.coords.latitude,lon=pos.coords.longitude;
-        const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m&timezone=auto');
-        if(!r.ok)throw Error('weather unavailable');
-        const d=await r.json();
-        el.textContent=Number(d.current.temperature_2m).toLocaleString('bn-BD')+'°C';
-      }catch(e){el.textContent='বর্তমান তাপমাত্রা পাওয়া যাচ্ছে না'}
-    },function(){el.textContent='তাপমাত্রা দেখতে লোকেশন অনুমতি দিন'},{enableHighAccuracy:false,timeout:10000,maximumAge:600000});
+    async function fetchTemperature(lat,lon){
+      const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m&timezone=auto');
+      if(!r.ok)throw Error('weather unavailable');
+      const d=await r.json();
+      if(!d.current||typeof d.current.temperature_2m!=='number')throw Error('temperature unavailable');
+      el.textContent=Number(d.current.temperature_2m).toLocaleString('bn-BD')+'°C';
+    }
+    el.textContent='তাপমাত্রা লোড হচ্ছে…';
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        function(pos){fetchTemperature(pos.coords.latitude,pos.coords.longitude).catch(function(){el.textContent='বর্তমান তাপমাত্রা পাওয়া যাচ্ছে না';});},
+        function(){fetchTemperature(23.9571,91.1119).catch(function(){el.textContent='তাপমাত্রা পাওয়া যাচ্ছে না';});},
+        {enableHighAccuracy:false,timeout:10000,maximumAge:600000}
+      );
+    }else{
+      fetchTemperature(23.9571,91.1119).catch(function(){el.textContent='তাপমাত্রা পাওয়া যাচ্ছে না';});
+    }
   }
   document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(!wasOpen){panel.classList.add('open');btn.setAttribute('aria-expanded','true')}})});
   document.getElementById('menuLogout').addEventListener('click',async function(){closeHomeMenu();const {error}=await db.auth.signOut();if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return}msg.textContent='আপনি লগআউট করেছেন।';showSession(null)});
