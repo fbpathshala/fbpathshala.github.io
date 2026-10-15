@@ -138,7 +138,7 @@ main.wrap{padding-top:24px}
 <details class="topDrop"><summary>📚 Study Material <span class="topChevron">⌄</span></summary><div class="topDropMenu"><a href="/study-material/">Study Material খুলুন</a><a href="/exam/study-materials.html">Job Care Study Material পরিচালনা</a><a href="/academic/index.html">Academic Care Study Material</a></div></details>
 <details class="topDrop"><summary>📌 গুরুত্বপূর্ণ তথ্য ও লিংক <span class="topChevron">⌄</span></summary><div class="topDropMenu"><a href="/#important-links">গুরুত্বপূর্ণ লিংক দেখুন</a><a href="/exam/admin.html">Job Care অ্যাডমিন</a><a href="/academic/admin.html">Academic Care অ্যাডমিন</a></div></details>
 <details class="topDrop"><summary>👥 Facebook Pathshala <span class="topChevron">⌄</span></summary><div class="topDropMenu"><a href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">Facebook Page ↗</a><a href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">Facebook Group ↗</a></div></details>
-</nav><button class="topLogout" id="topLogout" type="button">🚪 Log Out</button>
+</nav><button class="topLogout" id="topLogout" type="button" hidden>🚪 Log Out</button>
 <button class="menuBtn" id="homeMenuButton" type="button" aria-label="মেনু খুলুন" aria-expanded="false" aria-controls="homeMenu">☰</button></div></div></header>
 <section id="centralLogin" class="wrap" aria-labelledby="centralLoginTitle"><h2 id="centralLoginTitle">অ্যাডমিন লগইন</h2><p>সিস্টেমগুলোতে প্রবেশ করতে আপনার অ্যাডমিন ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।</p><form id="centralLoginForm"><input id="centralEmail" type="email" autocomplete="username" placeholder="Admin Email" required><input id="centralPassword" type="password" autocomplete="current-password" placeholder="Password" required><button id="centralLoginButton" type="submit">লগইন করুন</button><div id="centralLoginMsg" role="status" aria-live="polite"></div></form></section>
 <main class="wrap central-hidden" id="centralApp">
@@ -209,6 +209,7 @@ main.wrap{padding-top:24px}
     loginPanel.classList.toggle('central-hidden',ok);
     app.classList.toggle('central-hidden',!ok);
     footer.classList.toggle('central-hidden',!ok);
+    document.getElementById('topLogout').hidden=!ok;
     document.getElementById('centralUserEmail').textContent=ok?(session.user.email||'অ্যাডমিন'): '';
   }
   async function init(){
