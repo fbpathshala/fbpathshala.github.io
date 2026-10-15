@@ -228,11 +228,26 @@ main.wrap{padding-top:24px}
     if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return;}
     msg.textContent='আপনি লগআউট করেছেন।';showSession(null);
   });
+  function formatBangladeshBanglaDate(date){
+    const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date);
+    const p={};parts.forEach(function(x){p[x.type]=x.value});
+    const gy=Number(p.year),gm=Number(p.month),gd=Number(p.day);
+    const monthNames=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+    const startYear=(gm>4||(gm===4&&gd>=14))?gy:gy-1;
+    const start=new Date(Date.UTC(startYear,3,14));
+    const today=Date.UTC(gy,gm-1,gd);
+    let day=Math.floor((today-start.getTime())/86400000);
+    const monthLengths=[31,31,31,31,31,30,30,30,30,30,leapYear(gy+1)?30:29,30];
+    let month=0;
+    while(month<11&&day>=monthLengths[month]){day-=monthLengths[month];month++;}
+    return new Intl.NumberFormat('bn-BD').format(day+1)+' '+monthNames[month]+' '+new Intl.NumberFormat('bn-BD').format(startYear-593)+' বঙ্গাব্দ';
+  }
+  function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
   function updateClock(){
     const now=new Date();
-    document.getElementById('banglaDate').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric',calendar:'bengali'}).format(now);
+    document.getElementById('banglaDate').textContent=formatBangladeshBanglaDate(now);
     document.getElementById('englishDate').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'2-digit',month:'long',year:'numeric'}).format(now);
-    document.getElementById('hijriDate').textContent=new Intl.DateTimeFormat('bn-BD-u-ca-islamic-umalqura',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'}).format(now);
+    document.getElementById('hijriDate').textContent=new Intl.DateTimeFormat('bn-BD-u-ca-islamic',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'}).format(now)+' হিজরি';
     document.getElementById('todayDay').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now);
     document.getElementById('liveTime').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
   }
@@ -255,7 +270,17 @@ main.wrap{padding-top:24px}
   }
   async function loadTemperature(){
     const el=document.getElementById('temperature');
-    try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=22.3569&longitude=91.7832&current=temperature_2m&timezone=Asia%2FDhaka');if(!r.ok)throw Error('weather unavailable');const d=await r.json();el.textContent=Number(d.current.temperature_2m).toLocaleString('bn-BD')+'°C'}catch(e){el.textContent='এখন পাওয়া যাচ্ছে না'}
+    if(!navigator.geolocation){el.textContent='এই ব্রাউজারে লোকেশন সাপোর্ট নেই';return}
+    el.textContent='লোকেশন নেওয়া হচ্ছে…';
+    navigator.geolocation.getCurrentPosition(async function(pos){
+      try{
+        const lat=pos.coords.latitude,lon=pos.coords.longitude;
+        const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m&timezone=auto');
+        if(!r.ok)throw Error('weather unavailable');
+        const d=await r.json();
+        el.textContent=Number(d.current.temperature_2m).toLocaleString('bn-BD')+'°C';
+      }catch(e){el.textContent='বর্তমান তাপমাত্রা পাওয়া যাচ্ছে না'}
+    },function(){el.textContent='তাপমাত্রা দেখতে লোকেশন অনুমতি দিন'},{enableHighAccuracy:false,timeout:10000,maximumAge:600000});
   }
   document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(!wasOpen){panel.classList.add('open');btn.setAttribute('aria-expanded','true')}})});
   document.getElementById('menuLogout').addEventListener('click',async function(){closeHomeMenu();const {error}=await db.auth.signOut();if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return}msg.textContent='আপনি লগআউট করেছেন।';showSession(null)});
