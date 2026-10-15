@@ -33,6 +33,7 @@ h1{font-size:clamp(32px,6vw,52px);line-height:1.12;margin:16px 0 12px}.hero p{fo
 .menu{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:50}.panel{position:absolute;right:12px;top:12px;width:min(370px,calc(100% - 24px));background:#fff;border-radius:20px;padding:18px;box-shadow:0 20px 55px rgba(0,0,0,.2)}
 .panelTop{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 12px;border-bottom:1px solid var(--border)}.panelTop strong{font-size:18px}.close{border:0;background:#f1f5f9;border-radius:10px;width:38px;height:38px;font-size:20px;cursor:pointer}
 .link{display:flex;align-items:center;gap:10px;padding:14px 12px;border-radius:12px;color:var(--text);font-weight:800;margin-top:5px}.link:hover{background:#f1f5f9}.note{margin-top:10px;padding:12px;border-radius:12px;background:#f8fafc;color:var(--muted);font-size:12px;line-height:1.6}
+.careGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.careCard{background:#fff;border:1px solid var(--border);border-radius:22px;padding:26px;box-shadow:0 8px 26px rgba(15,23,42,.06)}.careCard.academic{border-top:5px solid #0f766e}.careCard.job{border-top:5px solid #2563eb}.careTop{display:flex;align-items:center;gap:13px;margin-bottom:12px}.careIcon{width:58px;height:58px;border-radius:17px;background:#e8f7f3;display:grid;place-items:center;font-size:31px}.job .careIcon{background:#eaf2ff}.careCard h3{font-size:23px;margin:0}.careCard p{color:var(--muted);line-height:1.75;margin:8px 0 16px}.subLinks{display:grid;grid-template-columns:1fr 1fr;gap:10px}.subLink{display:block;background:#f4f8fc;border:1px solid #e0e9f2;border-radius:13px;padding:13px;color:#173b59;font-weight:800}.subLink small{display:block;font-weight:500;color:var(--muted);line-height:1.5;margin-top:5px}.dateStrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.dateTile{min-width:0;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px}.dateTile span{display:block;color:var(--muted);font-size:12px}.dateTile strong{display:block;margin-top:5px;color:#123b4a;font-size:15px;line-height:1.5}.noticeBoard{margin-top:14px;padding:18px 20px;border-radius:17px;background:#fff7e6;border:1px solid #f3dfad}.noticeBoard h2{margin:6px 0;font-size:20px}.noticeBoard p{margin:0;color:#72561d;line-height:1.7}.noticeLabel{display:inline-block;padding:4px 8px;border-radius:999px;background:#ffedc2;color:#865b00;font-size:12px;font-weight:800}@media(max-width:700px){.careGrid{grid-template-columns:1fr}.dateStrip{grid-template-columns:repeat(2,minmax(0,1fr))}.careCard{padding:20px}}
 @media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.heroCard{grid-template-columns:1fr}.heroVisual{display:none}.about{grid-template-columns:1fr}}
 @media(max-width:520px){.siteLogo{width:min(330px,72vw);max-height:62px}.topbar{padding:9px 12px}.wrap{padding:0 13px}.hero{padding:35px 0 25px}.heroCard{padding:30px 21px;border-radius:22px}.hero p{font-size:15px}.cards{grid-template-columns:1fr}.social{display:block;padding:24px}.socialActions{margin-top:17px}.section{padding-bottom:28px}}
 </style>
@@ -47,19 +48,21 @@ h1{font-size:clamp(32px,6vw,52px);line-height:1.12;margin:16px 0 12px}.hero p{fo
 <section class="hero"><div class="wrap"><div class="heroCard">
 <div><span class="eyebrow">স্বাগতম ফেইসবুক পাঠশালায়</span><h1>শিখুন, অনুশীলন করুন,<br>এগিয়ে যান।</h1>
 <p>শিক্ষামূলক তথ্য, অনলাইন পরীক্ষা, স্টাডি ম্যাটেরিয়াল এবং প্রয়োজনীয় রিসোর্স—সবকিছু সহজভাবে এক জায়গায় পাওয়ার জন্য ফেইসবুক পাঠশালা।</p>
-<div class="heroActions"><a class="btn primary" href="/exam/">📝 পরীক্ষা দেখুন</a><a class="btn light" href="#resources">📚 আরও দেখুন</a></div></div>
+<div class="heroActions"><a class="btn primary" href="/academic/">🎓 Academic Care</a><a class="btn light" href="#resources">📚 সব বিভাগ দেখুন</a></div></div>
 <div class="heroVisual" aria-hidden="true"><div class="book">📖</div></div>
 </div></div></section>
 
 <section class="section" aria-label="তারিখ, সময় ও ঘোষণা"><div class="wrap">
-<div class="dateStrip"><div class="dateTile"><span>বাংলা তারিখ</span><strong id="publicBanglaDate">লোড হচ্ছে…</strong></div><div class="dateTile"><span>English date</span><strong id="publicEnglishDate">Loading…</strong></div><div class="dateTile"><span>বার ও বাংলাদেশ সময়</span><strong><span id="publicDay" style="display:inline;color:inherit;font-size:inherit">লোড হচ্ছে…</span> · <span id="publicTime" style="display:inline;color:inherit;font-size:inherit">--:--:--</span></strong></div></div>
+<div class="dateStrip"><div class="dateTile"><span>বাংলা তারিখ</span><strong id="publicBanglaDate">লোড হচ্ছে…</strong></div><div class="dateTile"><span>ইংরেজি তারিখ</span><strong id="publicEnglishDate">Loading…</strong></div><div class="dateTile"><span>হিজরি তারিখ</span><strong id="publicHijriDate">লোড হচ্ছে…</strong></div><div class="dateTile"><span>বার ও বাংলাদেশ সময়</span><strong><span id="publicDay" style="display:inline;color:inherit;font-size:inherit">লোড হচ্ছে…</span> · <span id="publicTime" style="display:inline;color:inherit;font-size:inherit">--:--:--</span></strong></div></div>
 <div class="noticeBoard" id="important-links"><span class="noticeLabel">গুরুত্বপূর্ণ ঘোষণা</span><h2>নোটিশ ও আপডেট</h2><p id="publicNoticeText">নতুন পরীক্ষা, ফলাফল ও গুরুত্বপূর্ণ ঘোষণা এখানে প্রকাশ করা হবে।</p></div>
 </div></section>
 
-<section class="section" id="resources"><div class="wrap"><div class="sectionHead"><h2>আপনার প্রয়োজনীয় রিসোর্স</h2><p>এক ক্লিকেই প্রয়োজনীয় জায়গায় পৌঁছে যান।</p></div>
-<div class="cards">
-<a class="card cardLink" href="/exam/"><div class="icon">📝</div><h3>অনলাইন পরীক্ষা</h3><p>চলমান ও উন্মুক্ত পরীক্ষাগুলো দেখুন এবং সরাসরি অংশ নিন।</p></a>
-<a class="card cardLink" href="/study-material/"><div class="icon">📚</div><h3>স্টাডি ম্যাটেরিয়াল</h3><p>পড়াশোনার প্রয়োজনীয় উপকরণ ও সহায়ক তথ্য দেখুন।</p></a>
+<section class="section" id="resources"><div class="wrap"><div class="sectionHead"><h2>আপনার প্রয়োজনীয় বিভাগ</h2><p>Academic Care ও Job Care থেকে প্রয়োজনীয় সেবা বেছে নিন।</p></div>
+<div class="careGrid">
+<article class="careCard academic"><div class="careTop"><div class="careIcon">🎓</div><h3>Academic Care</h3></div><p>একাডেমিক পড়াশোনা, বিষয়ভিত্তিক প্রশ্নব্যাংক এবং প্রকাশিত পরীক্ষা।</p><a class="btn primary" href="/academic/">Academic Care খুলুন ↗</a></article>
+<article class="careCard job"><div class="careTop"><div class="careIcon">💼</div><h3>Job Care</h3></div><p>চাকরির প্রস্তুতির পরীক্ষা ও স্টাডি ম্যাটেরিয়াল—এক জায়গায়।</p><div class="subLinks"><a class="subLink" href="/exam/">📝 Exam System<small>পরীক্ষার তালিকা ও অনলাইন পরীক্ষা</small></a><a class="subLink" href="/study-material/">📚 Study Materials<small>নোট, PDF ও প্রস্তুতির উপকরণ</small></a></div></article>
+</div>
+<div class="cards" style="margin-top:16px">
 <a class="card cardLink" href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener"><div class="icon">📢</div><h3>গুরুত্বপূর্ণ পোস্ট</h3><p>ফেইসবুক পাঠশালার গুরুত্বপূর্ণ আপডেট ও পোস্ট দেখুন।</p></a>
 <a class="card cardLink" href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener"><div class="icon">👥</div><h3>ফেইসবুক গ্রুপ</h3><p>আমাদের গ্রুপে যুক্ত হয়ে শিক্ষামূলক আলোচনায় অংশ নিন।</p></a>
 </div></div></section>
@@ -77,7 +80,7 @@ h1{font-size:clamp(32px,6vw,52px);line-height:1.12;margin:16px 0 12px}.hero p{fo
 
 <div id="menu" class="menu" onclick="if(event.target===this)closeMenu()"><div class="panel">
 <div class="panelTop"><strong>ফেইসবুক পাঠশালা</strong><button class="close" aria-label="মেনু বন্ধ করুন" onclick="closeMenu()">×</button></div>
-<a class="link" href="/">🏠 হোম</a><a class="link" href="/exam/">📝 পরীক্ষা</a><a class="link" href="/study-material/">📚 স্টাডি ম্যাটেরিয়াল</a>
+<a class="link" href="/">🏠 হোম</a><a class="link" href="/academic/">🎓 Academic Care</a><a class="link" href="/exam/">💼 Job Care — Exam System</a><a class="link" href="/study-material/">📚 Job Care — Study Materials</a>
 <a class="link" href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">📢 গুরুত্বপূর্ণ পোস্ট</a>
 <a class="link" href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">👥 ফেইসবুক গ্রুপ</a>
 <div class="note">পরীক্ষা ও অন্যান্য বিভাগ আলাদা পেজে খোলা হবে। এই Home page-এ কোনো পরীক্ষার প্রশ্ন বা পরীক্ষার তালিকা রাখা হয়নি।</div>
@@ -88,6 +91,7 @@ function updatePublicClock(){
  const now=new Date();
  document.getElementById("publicBanglaDate").textContent=new Intl.DateTimeFormat("bn-BD",{timeZone:"Asia/Dhaka",day:"numeric",month:"long",year:"numeric",calendar:"bengali"}).format(now);
  document.getElementById("publicEnglishDate").textContent=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Dhaka",day:"2-digit",month:"long",year:"numeric"}).format(now);
+ document.getElementById("publicHijriDate").textContent=new Intl.DateTimeFormat("bn-BD-u-ca-islamic-umalqura",{timeZone:"Asia/Dhaka",day:"numeric",month:"long",year:"numeric"}).format(now);
  document.getElementById("publicDay").textContent=new Intl.DateTimeFormat("bn-BD",{timeZone:"Asia/Dhaka",weekday:"long"}).format(now);
  document.getElementById("publicTime").textContent=new Intl.DateTimeFormat("bn-BD",{timeZone:"Asia/Dhaka",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true}).format(now);
 }
