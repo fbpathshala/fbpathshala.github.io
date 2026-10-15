@@ -259,6 +259,37 @@ main.wrap{padding-top:24px}
     document.getElementById('todayDay').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now);
     document.getElementById('liveTime').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
   }
+  function getVisitorKey(){
+    const keyName='fbpathshala_visitor_key';
+    try{
+      let key=localStorage.getItem(keyName);
+      if(!key){
+        key=(window.crypto&&typeof window.crypto.randomUUID==='function')
+          ?window.crypto.randomUUID()
+          :'v-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)+'-'+Math.random().toString(36).slice(2);
+        localStorage.setItem(keyName,key);
+      }
+      return key;
+    }catch(e){
+      return 'v-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)+'-'+Math.random().toString(36).slice(2);
+    }
+  }
+  async function registerVisitor(){
+    if(!window.db||typeof db.rpc!=='function')return;
+    try{
+      const {error}=await db.rpc('register_site_visitor',{p_visitor_key:getVisitorKey()});
+      if(error)console.error('Visitor registration failed:',error.message);
+    }catch(e){console.error('Visitor registration failed:',e);}
+  }
+  async function countVisitors(){
+    if(!window.db||typeof db.rpc!=='function')return null;
+    try{
+      const {data,error}=await db.rpc('count_site_visitors');
+      if(error)return null;
+      const value=Array.isArray(data)?data[0]:data;
+      return value===null||value===undefined?0:Number(value);
+    }catch(e){return null;}
+  }
   async function countRows(table){
     try{const r=await db.from(table).select('id',{count:'exact',head:true});return r.error?null:(r.count||0)}catch(e){return null}
   }
@@ -271,7 +302,7 @@ main.wrap{padding-top:24px}
       countRows('questions'),countRows('academic_care_questions'),
       countRows('exam_attempts'),
       countRows('academic_care_submissions'),countRows('exams'),countRows('academic_care_exams'),
-      countRows('site_visitors')
+      countVisitors()
     ];
     const values=await Promise.all(tasks);
     ['jobQuestionCount','academicQuestionCount','jobStudentCount','academicStudentCount','jobExamCount','academicExamCount','totalVisitorCount'].forEach((id,i)=>showCount(id,values[i]));
@@ -292,7 +323,7 @@ main.wrap{padding-top:24px}
   }
   document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(!wasOpen){panel.classList.add('open');btn.setAttribute('aria-expanded','true')}})});
   document.getElementById('menuLogout').addEventListener('click',async function(){closeHomeMenu();const {error}=await db.auth.signOut();if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return}msg.textContent='আপনি লগআউট করেছেন।';showSession(null)});
-  updateClock();setInterval(updateClock,1000);loadTemperature();setInterval(loadTemperature,600000);
+  updateClock();setInterval(updateClock,1000);registerVisitor().finally(function(){loadDashboardStats();});loadTemperature();setInterval(loadTemperature,600000);
   init();
 })();
 </script>
