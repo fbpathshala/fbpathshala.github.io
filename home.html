@@ -203,7 +203,6 @@ main.wrap{padding-top:24px}
     loginPanel.classList.toggle('central-hidden',ok);
     app.classList.toggle('central-hidden',!ok);
     footer.classList.toggle('central-hidden',!ok);
-    document.getElementById('topLogout').hidden=!ok;
     document.getElementById('centralUserEmail').textContent=ok?(session.user.email||'অ্যাডমিন'): '';
   }
   async function init(){
