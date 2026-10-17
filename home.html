@@ -297,22 +297,22 @@ main.wrap{padding-top:24px}
   }
   function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
   function formatBangladeshHijriDate(date){
-    const formatter=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{calendar:'islamic-umalqura',timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'});
-    const parts=formatter.formatToParts(date);
-    const p={};parts.forEach(function(x){p[x.type]=x.value});
-    const months={
-      'Muharram':'মহররম','Safar':'সফর','Rabiʻ I':'রবিউল আউয়াল','Rabi I':'রবিউল আউয়াল',
-      'Rabiʻ II':'রবিউস সানি','Rabi II':'রবিউস সানি','Jumada I':'জমাদিউল আউয়াল','Jumada II':'জমাদিউস সানি',
-      'Rajab':'রজব','Shaʻban':'শাবান','Shaban':'শাবান','Ramadan':'রমজান','Shawwal':'শাওয়াল',
-      'Dhuʻl-Qiʻdah':'জিলকদ','Dhu al-Qidah':'জিলকদ','Dhuʻl-Hijjah':'জিলহজ','Dhu al-Hijjah':'জিলহজ'
-    };
-    const month=months[p.month];
-    if(!month||!/^\\d+$/.test(p.day)||!/^\\d+$/.test(p.year)){
+    try{
+      const formatter=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{calendar:'islamic-umalqura',timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'});
+      const parts=formatter.formatToParts(date);
+      const p={};parts.forEach(function(x){p[x.type]=x.value});
+      const months=['','মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
+      const month=months[Number(p.month)];
+      const dayNumber=Number(p.day), yearNumber=Number(p.year);
+      if(!month||!Number.isFinite(dayNumber)||!Number.isFinite(yearNumber)){
+        return 'হিজরি তারিখ পাওয়া যায়নি';
+      }
+      const day=new Intl.NumberFormat('bn-BD').format(dayNumber);
+      const year=new Intl.NumberFormat('bn-BD').format(yearNumber);
+      return day+' '+month+', '+year+' হিজরি';
+    }catch(error){
       return 'হিজরি তারিখ পাওয়া যায়নি';
     }
-    const day=new Intl.NumberFormat('bn-BD').format(Number(p.day));
-    const year=new Intl.NumberFormat('bn-BD').format(Number(p.year));
-    return day+' '+month+', '+year+' হিজরি';
   }
   function updateClock(){
     const now=new Date();
