@@ -297,12 +297,21 @@ main.wrap{padding-top:24px}
   }
   function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
   function formatBangladeshHijriDate(date){
-    const parts=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'}).formatToParts(date);
+    const formatter=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{calendar:'islamic-umalqura',timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'});
+    const parts=formatter.formatToParts(date);
     const p={};parts.forEach(function(x){p[x.type]=x.value});
-    const months={'Muharram':'মহররম','Safar':'সফর','Rabiʻ I':'রবিউল আউয়াল','Rabiʻ II':'রবিউস সানি','Jumada I':'জমাদিউল আউয়াল','Jumada II':'জমাদিউস সানি','Rajab':'রজব','Shaʻban':'শাবান','Ramadan':'রমজান','Shawwal':'শাওয়াল','Dhuʻl-Qiʻdah':'জিলকদ','Dhuʻl-Hijjah':'জিলহজ'};
+    const months={
+      'Muharram':'মহররম','Safar':'সফর','Rabiʻ I':'রবিউল আউয়াল','Rabi I':'রবিউল আউয়াল',
+      'Rabiʻ II':'রবিউস সানি','Rabi II':'রবিউস সানি','Jumada I':'জমাদিউল আউয়াল','Jumada II':'জমাদিউস সানি',
+      'Rajab':'রজব','Shaʻban':'শাবান','Shaban':'শাবান','Ramadan':'রমজান','Shawwal':'শাওয়াল',
+      'Dhuʻl-Qiʻdah':'জিলকদ','Dhu al-Qidah':'জিলকদ','Dhuʻl-Hijjah':'জিলহজ','Dhu al-Hijjah':'জিলহজ'
+    };
+    const month=months[p.month];
+    if(!month||!/^\\d+$/.test(p.day)||!/^\\d+$/.test(p.year)){
+      return 'হিজরি তারিখ পাওয়া যায়নি';
+    }
     const day=new Intl.NumberFormat('bn-BD').format(Number(p.day));
     const year=new Intl.NumberFormat('bn-BD').format(Number(p.year));
-    const month=months[p.month]||p.month;
     return day+' '+month+', '+year+' হিজরি';
   }
   function updateClock(){
