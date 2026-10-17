@@ -166,6 +166,13 @@ main.wrap{padding-top:24px}
 @media(max-width:760px){.stats-grid{grid-template-columns:1fr 1fr}.stat-pair{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.stats-grid{grid-template-columns:1fr;gap:11px}.stat-pair{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-group{padding:12px}.stat-card{padding:11px}.visitor-card{min-height:150px}}
 
+
+/* Final central management submenu */
+.menuGroupTitle{padding:8px 10px 5px;color:#6a7890;font-size:11px;font-weight:850;letter-spacing:.2px}
+#managementSub .menuSubLink{display:flex;align-items:center;gap:8px;padding:12px;margin-top:6px;border:1px solid #dfe7f5;border-radius:10px;background:#fff!important;color:#244b81;font-size:13px;font-weight:750}
+#managementSub .menuSubLink:before{content:"↗";display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border-radius:8px;background:#e8efff;color:#2458d3;font-weight:900}
+#managementSub .menuSubLink:hover{background:#edf4ff!important;border-color:#b9cdf7;color:#1d4ed8}
+
 </style>
 </head>
 <body>
@@ -222,7 +229,13 @@ main.wrap{padding-top:24px}
 <div class="menuOverlay" id="homeMenu" aria-hidden="true"><nav class="menuPanel" aria-label="কেন্দ্রীয় মেনু">
 <div class="menuHead"><strong>☰ ফেইসবুক পাঠশালা</strong><button class="menuClose" id="homeMenuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div>
 <button class="menuLink" type="button" data-section-toggle="managementSub" aria-controls="managementSub" aria-expanded="false">⚙️ ব্যবস্থাপনা <span style="margin-left:auto">⌄</span></button>
-<div class="menuGroup" id="managementSub"><a class="menuSubLink" href="/exam/admin.html">তথ্য ব্যবস্থাপনা</a><a class="menuSubLink" href="/exam/question_create.html">প্রশ্ন তৈরির বর্তমান ব্যবস্থাপনা (অস্থায়ী)</a></div>
+<div class="menuGroup" id="managementSub">
+  <div class="menuGroupTitle">🧭 সেকশন, ক্যাটাগরি, ফোল্ডার ও সেট</div>
+  <a class="menuSubLink" href="/exam/question_create.html">জব কেয়ার ব্যবস্থাপনা</a>
+  <a class="menuSubLink" href="/academic/admin.html">একাডেমিক কেয়ার ব্যবস্থাপনা</a>
+  <div class="menuGroupTitle" style="margin-top:12px">📌 সাইটের তথ্য</div>
+  <a class="menuSubLink" href="/exam/admin.html">গুরুত্বপূর্ণ তথ্য ও স্টাডি ম্যাটেরিয়াল ব্যবস্থাপনা</a>
+</div>
 <button class="menuLink" type="button" data-section-toggle="questionCreateSub" aria-controls="questionCreateSub" aria-expanded="false">✍️ প্রশ্ন তৈরি <span style="margin-left:auto">⌄</span></button>
 <div class="menuGroup" id="questionCreateSub"><a class="menuSubLink" href="/exam/question_create.html">Job Care</a><a class="menuSubLink" href="/academic/admin.html">Academic Care</a></div>
 <button class="menuLink" type="button" data-section-toggle="questionBankSub" aria-controls="questionBankSub" aria-expanded="false">🗂️ প্রশ্ন ব্যাংক <span style="margin-left:auto">⌄</span></button>
