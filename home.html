@@ -130,6 +130,42 @@ main.wrap{padding-top:24px}
 @media(max-width:380px){.welcome-art{display:none}.welcome-copy h2{font-size:24px}.date-card{padding:11px}.date-card span{font-size:10px}.stat-card strong{font-size:23px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
+
+/* Final colourful homepage statistics */
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.stat-group{min-width:0;overflow:hidden;border:1px solid #e0e7ff;border-radius:19px;padding:14px;background:linear-gradient(145deg,#fff,#f7f8ff);box-shadow:0 9px 24px #312e8110}
+.stat-group-heading{display:flex;align-items:center;gap:10px;margin:0 0 12px;color:#312e81}
+.stat-group-heading>span{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:13px;background:#e0e7ff;font-size:21px}
+.stat-group-heading strong{display:block;font-size:15px;font-weight:850}
+.stat-group-heading small{display:block;margin-top:3px;color:#748198;font-size:11px}
+.stat-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat-card{min-width:0;border:1px solid transparent;border-radius:15px;padding:13px;box-shadow:none;transition:transform .18s,filter .18s}
+.stat-card:hover{transform:translateY(-2px);filter:saturate(1.06)}
+.stat-card:after{background:#ffffff22}
+.stat-card .stat-icon{width:36px;height:36px;border-radius:11px;margin-bottom:10px;background:#ffffff38}
+.stat-card .stat-label{min-height:34px;margin-bottom:5px;font-size:11px;line-height:1.45;color:#ffffffdf}
+.stat-card strong{font-size:clamp(22px,2.6vw,29px);color:#fff;overflow-wrap:anywhere}
+.stat-card.job-card{background:linear-gradient(145deg,#2563eb,#1d4ed8);border-color:#3b82f6}
+.stat-card.academic-card{background:linear-gradient(145deg,#0f9b8e,#0f766e);border-color:#14b8a6}
+.questions-group .stat-group-heading>span{background:#dbeafe}
+.exams-group{border-color:#fce7c1;background:linear-gradient(145deg,#fff,#fffbeb)}
+.exams-group .stat-group-heading{color:#92400e}
+.exams-group .stat-group-heading>span{background:#fef3c7}
+.exams-group .stat-card.job-card{background:linear-gradient(145deg,#f97316,#ea580c);border-color:#fb923c}
+.exams-group .stat-card.academic-card{background:linear-gradient(145deg,#9333ea,#7e22ce);border-color:#a855f7}
+.students-group{border-color:#ccfbf1;background:linear-gradient(145deg,#fff,#f0fdfa)}
+.students-group .stat-group-heading{color:#115e59}
+.students-group .stat-group-heading>span{background:#ccfbf1}
+.students-group .stat-card.job-card{background:linear-gradient(145deg,#0f766e,#115e59);border-color:#14b8a6}
+.students-group .stat-card.academic-card{background:linear-gradient(145deg,#6366f1,#4338ca);border-color:#818cf8}
+.visitor-card{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;grid-column:auto;background:linear-gradient(145deg,#db2777,#9333ea);border-color:#c026d3;color:#fff;padding:20px}
+.visitor-card .stat-icon{background:#ffffff2b}
+.visitor-card .stat-label{font-size:13px;min-height:0}
+.visitor-card strong{font-size:clamp(30px,4vw,42px)}
+.visitor-card small{color:#fce7f3;font-size:11px;margin-top:5px}
+@media(max-width:760px){.stats-grid{grid-template-columns:1fr 1fr}.stat-pair{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr;gap:11px}.stat-pair{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-group{padding:12px}.stat-card{padding:11px}.visitor-card{min-height:150px}}
+
 </style>
 </head>
 <body>
@@ -146,13 +182,28 @@ main.wrap{padding-top:24px}
   </section>
   <div class="section-caption stats-caption"><div><span class="section-kicker">SYSTEM OVERVIEW</span><h2>📊 সিস্টেমের পরিসংখ্যান</h2></div><span class="stats-note">ডেটাবেস থেকে প্রাপ্ত তথ্য</span></div>
   <section class="stats-grid" aria-label="সিস্টেম পরিসংখ্যান">
-    <div class="stat-card"><div class="stat-icon">🧭</div><span class="stat-label">Job Care-এর মোট প্রশ্ন</span><strong id="jobQuestionCount">—</strong></div>
-    <div class="stat-card"><div class="stat-icon">🎓</div><span class="stat-label">Academic Care-এর মোট প্রশ্ন</span><strong id="academicQuestionCount">—</strong></div>
-    <div class="stat-card"><div class="stat-icon">👥</div><span class="stat-label">Job Care-এর মোট অংশগ্রহণ</span><strong id="jobStudentCount">—</strong></div>
-    <div class="stat-card"><div class="stat-icon">👥</div><span class="stat-label">Academic Care-এর মোট জমা উত্তর</span><strong id="academicStudentCount">—</strong></div>
-    <div class="stat-card"><div class="stat-icon">📝</div><span class="stat-label">Job Care-এর মোট পরীক্ষা</span><strong id="jobExamCount">—</strong></div>
-    <div class="stat-card"><div class="stat-icon">📚</div><span class="stat-label">Academic Care-এর মোট পরীক্ষা</span><strong id="academicExamCount">—</strong></div>
-    <div class="stat-card wide"><div class="stat-icon">📈</div><span class="stat-label">মোট ভিজিটর</span><strong id="totalVisitorCount">—</strong></div>
+    <section class="stat-group questions-group" aria-label="প্রশ্ন সংখ্যা">
+      <div class="stat-group-heading"><span>📚</span><div><strong>প্রশ্ন সংখ্যা</strong><small>মোট সংরক্ষিত প্রশ্ন</small></div></div>
+      <div class="stat-pair">
+        <div class="stat-card job-card"><div class="stat-icon">🧭</div><span class="stat-label">জব কেয়ার</span><strong id="jobQuestionCount">—</strong></div>
+        <div class="stat-card academic-card"><div class="stat-icon">🎓</div><span class="stat-label">একাডেমিক কেয়ার</span><strong id="academicQuestionCount">—</strong></div>
+      </div>
+    </section>
+    <section class="stat-group exams-group" aria-label="পরীক্ষা সংখ্যা">
+      <div class="stat-group-heading"><span>📝</span><div><strong>পরীক্ষা সংখ্যা</strong><small>তৈরি করা পরীক্ষা</small></div></div>
+      <div class="stat-pair">
+        <div class="stat-card job-card"><div class="stat-icon">🧭</div><span class="stat-label">জব কেয়ার</span><strong id="jobExamCount">—</strong></div>
+        <div class="stat-card academic-card"><div class="stat-icon">🎓</div><span class="stat-label">একাডেমিক কেয়ার</span><strong id="academicExamCount">—</strong></div>
+      </div>
+    </section>
+    <section class="stat-group students-group" aria-label="পরীক্ষার্থী সংখ্যা">
+      <div class="stat-group-heading"><span>👥</span><div><strong>পরীক্ষার্থী সংখ্যা</strong><small>দুই বিভাগের অংশগ্রহণ</small></div></div>
+      <div class="stat-pair">
+        <div class="stat-card job-card"><div class="stat-icon">🧭</div><span class="stat-label">জব কেয়ার</span><strong id="jobStudentCount">—</strong></div>
+        <div class="stat-card academic-card"><div class="stat-icon">🎓</div><span class="stat-label">একাডেমিক কেয়ার</span><strong id="academicStudentCount">—</strong></div>
+      </div>
+    </section>
+    <div class="stat-card visitor-card"><div class="stat-icon">👁️</div><span class="stat-label">ভিজিটর সংখ্যা</span><strong id="totalVisitorCount">—</strong><small>ওয়েবসাইটের মোট ভিজিটর</small></div>
   </section>
   <div id="centralUser"><span id="centralUserEmail"></span><button id="centralLogout" type="button">লগআউট</button></div>
   <div class="section-head"><div><h2>কাজ নির্বাচন করুন</h2><p>প্রথমে কাজের ধরন বেছে নিন, তারপর Job Care বা Academic Care গন্তব্য নির্বাচন করুন।</p></div><span class="tag">একীভূত নেভিগেশন</span></div>
