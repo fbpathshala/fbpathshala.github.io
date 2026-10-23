@@ -99,6 +99,51 @@ updatePublicClock();setInterval(updatePublicClock,1000);
 function openMenu(){document.getElementById("menu").style.display="block";document.body.style.overflow="hidden"}
 function closeMenu(){document.getElementById("menu").style.display="none";document.body.style.overflow=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function loadPublishedSiteContent(){
+ const notice=document.getElementById('publicNoticeText');
+ const board=document.getElementById('important-links');
+ if(!notice||!board||!window.supabase)return;
+ const db=window.supabase.createClient('https://ydvbnalhcnfqpxkkmywr.supabase.co','sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a');
+ const now=new Date().toISOString();
+ const {data,error}=await db.from('site_content').select('id,section,title,body,link_url,sort_order,publish_at,expires_at').eq('status','published').or('publish_at.is.null,publish_at.lte.'+now).or('expires_at.is.null,expires_at.gt.'+now).order('sort_order',{ascending:true}).order('created_at',{ascending:false});
+ if(error){console.warn('Published site content could not load:',error.message);return;}
+ const rows=data||[];
+ const important=rows.filter(x=>x.section==='important-links');
+ const breaking=rows.filter(x=>x.section==='breaking-news');
+ if(important.length){
+  notice.textContent=important.map(x=>x.body||x.title).join(' • ');
+  const old=board.querySelector('[data-live-important-links]');
+  if(old)old.remove();
+  const list=document.createElement('div');list.dataset.liveImportantLinks='1';list.style.cssText='display:grid;gap:9px;margin-top:12px';
+  important.forEach(x=>{
+   const item=document.createElement(x.link_url?'a':'div');
+   if(x.link_url){item.href=x.link_url;item.target='_blank';item.rel='noopener noreferrer';}
+   item.style.cssText='display:block;padding:10px 12px;border:1px solid #f3dfad;border-radius:10px;background:#fff;color:#72561d;font-weight:700;overflow-wrap:anywhere';
+   item.textContent=x.title+(x.body&&x.body!==x.title?' — '+x.body:'');
+   list.appendChild(item);
+  });
+  board.appendChild(list);
+ }
+ if(breaking.length){
+  let news=document.getElementById('public-breaking-news');
+  if(!news){news=document.createElement('section');news.id='public-breaking-news';news.className='noticeBoard';news.style.marginTop='12px';board.insertAdjacentElement('afterend',news);}
+  news.replaceChildren();
+  const label=document.createElement('span');label.className='noticeLabel';label.textContent='ব্রেকিং নিউজ';news.appendChild(label);
+  const heading=document.createElement('h2');heading.textContent='সর্বশেষ সংবাদ';news.appendChild(heading);
+  breaking.forEach(x=>{
+   const article=document.createElement('article');article.style.cssText='padding:10px 0;border-top:1px solid #f3dfad;margin-top:8px';
+   const title=document.createElement(x.link_url?'a':'strong');title.textContent=x.title;
+   if(x.link_url){title.href=x.link_url;title.target='_blank';title.rel='noopener noreferrer';title.style.color='#72561d';}
+   article.appendChild(title);
+   if(x.body){const p=document.createElement('p');p.style.marginTop='5px';p.textContent=x.body;article.appendChild(p);}
+   news.appendChild(article);
+  });
+ }
+})().catch(e=>console.warn('Site content load error:',e));
 </script>
 </body>
 </html>
