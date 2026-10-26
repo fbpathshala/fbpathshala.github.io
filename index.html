@@ -123,6 +123,9 @@ body.menu-open{overflow:hidden}
   const wrap=document.getElementById('publicNoticeTicker'),track=document.getElementById('noticeTickerTrack');
   try{
    const now=new Date().toISOString();
+   const {data:setting,error:settingError}=await supabaseClient.from('site_feature_settings').select('enabled').eq('feature_key','breaking_news_ticker').maybeSingle();
+   if(settingError)throw settingError;
+   if(setting&&setting.enabled===false){wrap.hidden=true;track.replaceChildren();return}
    const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,status,publish_at,expires_at,sort_order,display_label,created_at').eq('section','breaking-news').eq('status','published').order('sort_order').order('created_at',{ascending:false});
    if(error)throw error;
    const rows=(data||[]).filter(n=>(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
