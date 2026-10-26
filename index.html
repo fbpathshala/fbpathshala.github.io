@@ -66,7 +66,7 @@ body.menu-open{overflow:hidden}
   <button class="menuBtn" id="menuOpen" type="button" aria-label="মেনু খুলুন" aria-controls="siteMenu" aria-expanded="false">☰</button>
  </div>
 </header>
-<div class="menuOverlay" id="menuOverlay" aria-hidden="true"><nav class="menuPanel" id="siteMenu" aria-label="প্রধান মেনু" tabindex="-1"><div class="menuHead"><strong>ফেইসবুক পাঠশালা</strong><button class="menuClose" id="menuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><a class="menuLink" href="/">🏠 <span>হোম</span></a><div class="menuSection"><button class="menuSectionToggle" id="jobCareToggle" type="button" aria-expanded="false" aria-controls="jobCareSubmenu"><span>💼 জব কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="jobCareSubmenu" hidden><a class="menuSubLink" href="/exam/">📝 পরীক্ষা</a><a class="menuSubLink" href="https://fbpathshala.github.io/exam/study-materials.html">📚 স্টাডি ম্যাটেরিয়াল</a></div></div><a class="menuLink" href="#live-exam-counts">📊 <span>চলমান পরীক্ষার সংখ্যা</span></a></nav></div>
+<div class="menuOverlay" id="menuOverlay" aria-hidden="true"><nav class="menuPanel" id="siteMenu" aria-label="প্রধান মেনু" tabindex="-1"><div class="menuHead"><strong>ফেইসবুক পাঠশালা</strong><button class="menuClose" id="menuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><a class="menuLink" href="/">🏠 <span>হোম</span></a><div class="menuSection"><button class="menuSectionToggle" id="jobCareToggle" type="button" aria-expanded="false" aria-controls="jobCareSubmenu"><span>💼 জব কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="jobCareSubmenu" hidden><a class="menuSubLink" href="/exam/">📝 পরীক্ষা</a><a class="menuSubLink" href="https://fbpathshala.github.io/exam/study-materials.html">📚 স্টাডি ম্যাটেরিয়াল</a></div></div><a class="menuLink" href="#live-exam-counts">📊 <span>চলমান পরীক্ষার সংখ্যা</span></a><a class="menuLink" href="#total-exam-counts">🧮 <span>মোট পরীক্ষার সংখ্যা</span></a></nav></div>
 <main class="info-wrap">
  <div class="section-caption"><h2>আজকের সময় ও তারিখ</h2><span class="live-pill"><i></i> লাইভ আপডেট</span></div>
  <section class="date-grid" aria-label="আজকের সময় ও তারিখ">
@@ -81,6 +81,13 @@ body.menu-open{overflow:hidden}
   <div class="exam-count-grid">
    <div class="exam-count-card"><div class="count-icon">💼</div><span class="count-label">জব কেয়ারে লাইভ পরীক্ষা</span><strong id="jobLiveCount">লোড হচ্ছে…</strong></div>
    <div class="exam-count-card"><div class="count-icon">🎓</div><span class="count-label">একাডেমিক কেয়ারে লাইভ পরীক্ষা</span><strong id="academicLiveCount">লোড হচ্ছে…</strong></div>
+  </div>
+ </section>
+ <section class="exam-count-section" id="total-exam-counts" aria-label="মোট পরীক্ষার সংখ্যা">
+  <div class="section-caption"><h2>মোট পরীক্ষার সংখ্যা</h2><span class="live-pill"><i></i> লাইভ আপডেট</span></div>
+  <div class="exam-count-grid">
+   <div class="exam-count-card"><div class="count-icon">💼</div><span class="count-label">জব কেয়ারে মোট পরীক্ষা</span><strong id="jobTotalCount">লোড হচ্ছে…</strong></div>
+   <div class="exam-count-card"><div class="count-icon">🎓</div><span class="count-label">একাডেমিক কেয়ারে মোট পরীক্ষা</span><strong id="academicTotalCount">লোড হচ্ছে…</strong></div>
   </div>
  </section>
 </main>
@@ -120,7 +127,25 @@ body.menu-open{overflow:hidden}
    console.warn('লাইভ পরীক্ষার সংখ্যা লোড করা যায়নি');
   }
  }
+ async function loadTotalExamCounts(){
+  const jobEl=document.getElementById('jobTotalCount'),academicEl=document.getElementById('academicTotalCount');
+  try{
+   const [jobResult,academicResult]=await Promise.all([
+    supabaseClient.from('exams').select('id',{count:'exact',head:true}),
+    supabaseClient.from('academic_care_exams').select('id',{count:'exact',head:true})
+   ]);
+   if(jobResult.error)throw jobResult.error;
+   if(academicResult.error)throw academicResult.error;
+   jobEl.textContent=bnCount(jobResult.count||0);
+   academicEl.textContent=bnCount(academicResult.count||0);
+  }catch(e){
+   jobEl.textContent='তথ্য পাওয়া যায়নি';
+   academicEl.textContent='তথ্য পাওয়া যায়নি';
+   console.warn('মোট পরীক্ষার সংখ্যা লোড করা যায়নি');
+  }
+ }
  loadLiveExamCounts();setInterval(loadLiveExamCounts,30000);
+ loadTotalExamCounts();setInterval(loadTotalExamCounts,30000);
  function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
  function formatBanglaDate(date){const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const gy=+p.year,gm=+p.month,gd=+p.day;const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];const sy=(gm>4||(gm===4&&gd>=14))?gy:gy-1;let day=Math.floor((Date.UTC(gy,gm-1,gd)-Date.UTC(sy,3,14))/86400000);const lengths=[31,31,31,31,31,30,30,30,30,30,leapYear(gy+1)?30:29,30];let m=0;while(m<11&&day>=lengths[m])day-=lengths[m++];const bn=n=>new Intl.NumberFormat('bn-BD').format(n);return bn(day+1)+' '+names[m]+' '+bn(sy-593)+' বঙ্গাব্দ'}
  function formatHijri(date){try{const p={};new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const months=['','মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];return new Intl.NumberFormat('bn-BD').format(+p.day)+' '+months[+p.month]+', '+new Intl.NumberFormat('bn-BD').format(+p.year)+' হিজরি'}catch(e){return 'হিজরি তারিখ পাওয়া যায়নি'}}
