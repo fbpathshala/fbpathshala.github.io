@@ -33,17 +33,6 @@ body{background:#fff;color:var(--text)}
   <button class="menuBtn" type="button" aria-label="মেনু খুলুন" aria-expanded="false" onclick="openMenu()">☰</button>
  </div>
 </header>
-<div id="menu" class="menu" onclick="if(event.target===this)closeMenu()">
- <nav class="panel" aria-label="প্রধান মেনু">
-  <div class="panelTop"><strong>ফেইসবুক পাঠশালা</strong><button class="close" type="button" aria-label="মেনু বন্ধ করুন" onclick="closeMenu()">×</button></div>
-  <a class="link" href="/">🏠 হোম</a>
-  <a class="link" href="/academic/">🎓 Academic Care</a>
-  <a class="link" href="/exam/">💼 Job Care — Exam System</a>
-  <a class="link" href="/exam/study-materials.html?v=20261025-study-material-dept1">📚 Job Care — Study Materials</a>
-  <a class="link" href="https://www.facebook.com/facebook.pathshala" target="_blank" rel="noopener">📢 গুরুত্বপূর্ণ পোস্ট</a>
-  <a class="link" href="https://www.facebook.com/groups/facebookpathshala" target="_blank" rel="noopener">👥 ফেইসবুক গ্রুপ</a>
- </nav>
-</div>
 <script>
 function openMenu(){const m=document.getElementById("menu");m.style.display="block";document.body.style.overflow="hidden";document.querySelector(".menuBtn").setAttribute("aria-expanded","true")}
 function closeMenu(){document.getElementById("menu").style.display="none";document.body.style.overflow="";document.querySelector(".menuBtn").setAttribute("aria-expanded","false")}
