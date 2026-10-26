@@ -7,6 +7,7 @@
 <title>ফেইসবুক পাঠশালা — কেন্দ্রীয় অ্যাডমিন হোম</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/exam/js/supabase.js?v=20261013-central-login"></script>
+<script src="/exam/js/live-visitors.js?v=20261026-adminhome1"></script>
 <style>
 :root{color-scheme:light;--ink:#14283f;--muted:#607086;--line:#e1e8f0;--blue:#2458d3;--bg:#f3f6fb;--teal:#0f766e}
 *{box-sizing:border-box}
@@ -211,6 +212,7 @@ main.wrap{padding-top:24px}
       </div>
     </section>
     <div class="stat-card visitor-card"><div class="stat-icon">👁️</div><span class="stat-label">ভিজিটর সংখ্যা</span><strong id="totalVisitorCount">—</strong><small>ওয়েবসাইটের মোট ভিজিটর</small></div>
+      <div class="stat-card visitor-card live-visitor-card"><div class="stat-icon">🟢</div><span class="stat-label">বর্তমান ভিজিটর</span><strong id="currentVisitorCount">০</strong><small>গত ২ মিনিটে সক্রিয় · প্রতি ১৫ সেকেন্ডে আপডেট</small></div>
   </section>
   <div id="centralUser"><span id="centralUserEmail"></span><button id="centralLogout" type="button">লগআউট</button></div>
 </main>
@@ -331,6 +333,15 @@ main.wrap{padding-top:24px}
       if(error)console.error('Visitor registration failed:',error.message);
     }catch(e){console.error('Visitor registration failed:',e);}
   }
+  async function updateCurrentVisitors(){
+    const out=document.getElementById('currentVisitorCount');
+    if(!out)return;
+    try{
+      if(!window.FBPATHSHALA_LIVE_VISITORS)throw new Error('tracker unavailable');
+      out.textContent=new Intl.NumberFormat('bn-BD').format(await window.FBPATHSHALA_LIVE_VISITORS.count());
+      out.title='সর্বশেষ আপডেট: '+new Date().toLocaleTimeString('bn-BD');
+    }catch(e){out.textContent='—';out.title='বর্তমান ভিজিটর লোড করা যায়নি';}
+  }
   async function countVisitors(){
     if(!window.db||typeof db.rpc!=='function')return null;
     try{
@@ -379,7 +390,7 @@ main.wrap{padding-top:24px}
   }
   document.querySelectorAll('[data-section-toggle]').forEach(function(btn){btn.addEventListener('click',function(){const panel=document.getElementById(btn.dataset.sectionToggle);const wasOpen=panel.classList.contains('open');document.querySelectorAll('.menuGroup').forEach(function(p){p.classList.remove('open')});document.querySelectorAll('[data-section-toggle]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(!wasOpen){panel.classList.add('open');btn.setAttribute('aria-expanded','true')}})});
   document.getElementById('menuLogout').addEventListener('click',async function(){closeHomeMenu();const {error}=await db.auth.signOut();if(error){msg.textContent='লগআউট করা যায়নি: '+error.message;return}msg.textContent='আপনি লগআউট করেছেন।';showSession(null)});
-  updateClock();setInterval(updateClock,1000);registerVisitor().finally(function(){loadDashboardStats();});loadTemperature();setInterval(loadTemperature,600000);
+  updateClock();setInterval(updateClock,1000);registerVisitor().finally(function(){loadDashboardStats();});updateCurrentVisitors();setInterval(updateCurrentVisitors,15000);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')updateCurrentVisitors()});loadTemperature();setInterval(loadTemperature,600000);
   init();
 })();
 </script>
