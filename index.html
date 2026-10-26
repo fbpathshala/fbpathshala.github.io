@@ -7,63 +7,54 @@
 <title>ফেইসবুক পাঠশালা</title>
 <style>
 *{box-sizing:border-box}
-:root{--primary:#1557c0;--primary2:#0d3f91;--text:#172033;--border:#e2e8f0}
+:root{--primary:#1557c0;--primary2:#0d3f91;--text:#172033;--border:#e2e8f0;--muted:#708198}
 html,body{margin:0;min-height:100%;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif}
-body{background:#fff;color:var(--text)}
+body{background:radial-gradient(ellipse at 15% 5%,#e7efff 0,transparent 36%),#f3f6fb;color:var(--text)}
 .top{background:linear-gradient(135deg,var(--primary2),var(--primary));color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 3px 14px rgba(15,23,42,.12)}
 .topbar{max-width:1100px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;min-width:0;color:#fff}
 .siteLogo{display:block;width:min(460px,72vw);height:auto;max-height:82px;object-fit:contain}
-.menuBtn{flex:0 0 auto;border:0;background:rgba(255,255,255,.16);color:#fff;width:46px;height:46px;border-radius:13px;font-size:27px;line-height:1;cursor:pointer;display:grid;place-items:center}
-.menuBtn:hover,.menuBtn:focus-visible{background:rgba(255,255,255,.28);outline:2px solid #fff;outline-offset:2px}
-.menu{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:50}
-.panel{position:absolute;right:12px;top:12px;width:min(370px,calc(100% - 24px));background:#fff;border-radius:20px;padding:18px;box-shadow:0 20px 55px rgba(0,0,0,.2);color:var(--text)}
-.panelTop{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 12px;border-bottom:1px solid var(--border)}
-.panelTop strong{font-size:18px}
-.close{border:0;background:#f1f5f9;border-radius:10px;width:38px;height:38px;font-size:20px;cursor:pointer}
-.link{display:flex;align-items:center;gap:10px;padding:14px 12px;border-radius:12px;color:var(--text);font-weight:800;margin-top:5px;text-decoration:none}
-.link:hover{background:#f1f5f9}
-@media(max-width:520px){.topbar{padding:9px 12px}.siteLogo{width:min(330px,72vw);max-height:62px}.menuBtn{width:44px;height:44px}}
-
-/* Public homepage: time, date and visitor-local temperature */
-.info-wrap{max-width:1100px;margin:24px auto;padding:0 18px 28px;color:#172033;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif}
-.info-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}.info-head h2{font-size:20px;margin:0}.info-live{font-size:12px;color:#087e68;background:#e5f8f1;border:1px solid #c8eee1;border-radius:999px;padding:7px 10px;white-space:nowrap}
-.info-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}.info-card{background:#fff;border:1px solid #e2eaf4;border-radius:16px;padding:15px 13px;min-height:100px;box-shadow:0 7px 20px #173f7c08;min-width:0}.info-card span{display:block;font-size:12px;color:#708198;margin-bottom:8px;line-height:1.5}.info-card strong{font-size:15px;line-height:1.55;overflow-wrap:anywhere;color:#1b3454}
-@media(max-width:900px){.info-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:620px){.info-wrap{margin:17px auto;padding:0 12px 22px}.info-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.info-card{padding:12px;min-height:92px}.info-head h2{font-size:18px}.info-card strong{font-size:14px}}
+.menuBtn{flex:0 0 auto;border:0;background:rgba(255,255,255,.16);color:#fff;width:46px;height:46px;border-radius:13px;font-size:27px;line-height:1;display:grid;place-items:center}
+.info-wrap{max-width:1120px;margin:24px auto;padding:0 18px 28px}
+.section-caption{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 0 13px}
+.section-caption h2{font-size:20px;letter-spacing:-.2px;margin:0}
+.live-pill{display:inline-flex;align-items:center;gap:7px;color:#087e68;background:#e5f8f1;border:1px solid #c8eee1;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.live-pill i{width:7px;height:7px;border-radius:50%;background:#10a77b;box-shadow:0 0 0 3px #10a77b20}
+.date-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px;margin:0 0 30px}
+.date-card{position:relative;overflow:hidden;background:#ffffffeb;border:1px solid #e3eaf4;border-radius:17px;padding:16px 14px;min-height:104px;box-shadow:0 7px 20px #173f7c07;min-width:0}
+.date-card span{display:block;font-size:11px;line-height:1.55;color:#708198;margin-bottom:8px}
+.date-card strong{font-size:15px;line-height:1.55;color:#1b3454;overflow-wrap:anywhere}
+@media(max-width:900px){.date-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.topbar{padding:9px 12px}.siteLogo{width:min(330px,72vw);max-height:62px}.menuBtn{width:44px;height:44px}.info-wrap{margin:17px auto;padding:0 12px 22px}.date-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.date-card{padding:13px;min-height:96px}.date-card strong{font-size:14px}.section-caption h2{font-size:18px}}
+@media(max-width:380px){.date-card{padding:11px}.date-card span{font-size:10px}}
 </style>
 </head>
 <body>
 <header class="top">
  <div class="topbar">
   <a class="brand" href="/" aria-label="ফেইসবুক পাঠশালা — হোম"><img class="siteLogo" src="/fbpathshala-logo-hd.jpg" alt="ফেইসবুক পাঠশালা — অনলাইনে শিক্ষা বিস্তারের বিশাল প্লাটফর্ম"></a>
-  <button class="menuBtn" type="button" aria-label="মেনু খুলুন" aria-expanded="false" onclick="openMenu()">☰</button>
+  <button class="menuBtn" type="button" aria-label="মেনু" aria-disabled="true">☰</button>
  </div>
 </header>
-<section class="info-wrap" aria-label="আজকের সময় ও তারিখ">
- <div class="info-head"><h2>আজকের সময় ও তারিখ</h2><span class="info-live">● লাইভ আপডেট</span></div>
- <div class="info-grid">
-  <div class="info-card"><span>🕒 আজকের বার ও সময়</span><strong><span id="todayDay">লোড হচ্ছে…</span> · <span id="liveTime">--:--:--</span></strong></div>
-  <div class="info-card"><span>📅 ইংরেজি তারিখ</span><strong id="englishDate">লোড হচ্ছে…</strong></div>
-  <div class="info-card"><span>🌾 বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div>
-  <div class="info-card"><span>🌙 হিজরি তারিখ</span><strong id="hijriDate">লোড হচ্ছে…</strong></div>
-  <div class="info-card"><span>🌡️ আপনার এলাকার তাপমাত্রা</span><strong id="temperature">লোকেশন খোঁজা হচ্ছে…</strong></div>
- </div>
-</section>
-
-<script>
-function openMenu(){const m=document.getElementById("menu");m.style.display="block";document.body.style.overflow="hidden";document.querySelector(".menuBtn").setAttribute("aria-expanded","true")}
-function closeMenu(){document.getElementById("menu").style.display="none";document.body.style.overflow="";document.querySelector(".menuBtn").setAttribute("aria-expanded","false")}
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
-</script>
-
+<main class="info-wrap">
+ <div class="section-caption"><h2>আজকের সময় ও তারিখ</h2><span class="live-pill"><i></i> লাইভ আপডেট</span></div>
+ <section class="date-grid" aria-label="আজকের সময় ও তারিখ">
+  <div class="date-card"><span>🕒 আজকের বার ও সময়</span><strong><span id="todayDay">লোড হচ্ছে…</span> · <span id="liveTime">--:--:--</span></strong></div>
+  <div class="date-card"><span>📅 ইংরেজি তারিখ</span><strong id="englishDate">লোড হচ্ছে…</strong></div>
+  <div class="date-card"><span>🌾 বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div>
+  <div class="date-card"><span>🌙 হিজরি তারিখ</span><strong id="hijriDate">লোড হচ্ছে…</strong></div>
+  <div class="date-card"><span>🌡️ আপনার এলাকার তাপমাত্রা</span><strong id="temperature">লোকেশন খোঁজা হচ্ছে…</strong></div>
+ </section>
+</main>
 <script>
 (function(){
  function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
  function formatBanglaDate(date){const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const gy=+p.year,gm=+p.month,gd=+p.day;const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];const sy=(gm>4||(gm===4&&gd>=14))?gy:gy-1;let day=Math.floor((Date.UTC(gy,gm-1,gd)-Date.UTC(sy,3,14))/86400000);const lengths=[31,31,31,31,31,30,30,30,30,30,leapYear(gy+1)?30:29,30];let m=0;while(m<11&&day>=lengths[m])day-=lengths[m++];const bn=n=>new Intl.NumberFormat('bn-BD').format(n);return bn(day+1)+' '+names[m]+' '+bn(sy-593)+' বঙ্গাব্দ'}
  function formatHijri(date){try{const p={};new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const months=['','মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];return new Intl.NumberFormat('bn-BD').format(+p.day)+' '+months[+p.month]+', '+new Intl.NumberFormat('bn-BD').format(+p.year)+' হিজরি'}catch(e){return 'হিজরি তারিখ পাওয়া যায়নি'}}
  function updateClock(){const now=new Date();document.getElementById('todayDay').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now);document.getElementById('liveTime').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);document.getElementById('englishDate').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'2-digit',month:'long',year:'numeric'}).format(now);document.getElementById('banglaDate').textContent=formatBanglaDate(now);document.getElementById('hijriDate').textContent=formatHijri(now)}
- async function temperature(lat,lon){const el=document.getElementById('temperature');try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m&timezone=auto');if(!r.ok)throw Error();const d=await r.json();if(typeof d.current?.temperature_2m!=='number')throw Error();el.textContent=new Intl.NumberFormat('bn-BD',{maximumFractionDigits:1}).format(d.current.temperature_2m)+'°C'}catch(e){el.textContent='তাপমাত্রা পাওয়া যায়নি'}}
- const temp=document.getElementById('temperature');if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>temperature(p.coords.latitude,p.coords.longitude),()=>{temp.textContent='তাপমাত্রা দেখতে লোকেশন অনুমতি দিন'}, {enableHighAccuracy:false,timeout:10000,maximumAge:600000})}else{temp.textContent='এই ব্রাউজারে লোকেশন সুবিধা নেই'}
+ async function loadTemperature(lat,lon){const el=document.getElementById('temperature');try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m&timezone=auto');if(!r.ok)throw Error();const d=await r.json();if(typeof d.current?.temperature_2m!=='number')throw Error();el.textContent=new Intl.NumberFormat('bn-BD',{maximumFractionDigits:1}).format(d.current.temperature_2m)+'°C'}catch(e){el.textContent='বর্তমান তাপমাত্রা পাওয়া যাচ্ছে না'}}
+ const temp=document.getElementById('temperature');
+ if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>loadTemperature(p.coords.latitude,p.coords.longitude),()=>{temp.textContent='তাপমাত্রা দেখতে লোকেশন অনুমতি দিন'}, {enableHighAccuracy:false,timeout:10000,maximumAge:600000})}else{temp.textContent='এই ব্রাউজারে লোকেশন সুবিধা নেই'}
  updateClock();setInterval(updateClock,1000);
 })();
 </script>
