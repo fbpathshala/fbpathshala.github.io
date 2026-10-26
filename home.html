@@ -182,6 +182,17 @@ main.wrap{padding-top:24px}
 .stats-grid>.visitor-card strong{font-size:clamp(22px,3.2vw,42px)}
 @media(max-width:480px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.stats-grid>.visitor-card{min-height:138px;padding:10px}.stats-grid>.visitor-card .stat-label{font-size:11px}.stats-grid>.visitor-card small{font-size:10px;line-height:1.4}}
 
+
+/* Match visitor statistics to the same grouped pattern as question, exam and student counts. */
+.visitors-group{border-color:#f5d0fe;background:linear-gradient(145deg,#fff,#fdf4ff)}
+.visitors-group .stat-group-heading{color:#86198f}
+.visitors-group .stat-group-heading>span{background:#fae8ff}
+.visitors-group .stat-pair .stat-card{min-height:118px;padding:clamp(10px,1.5vw,16px);border-radius:13px}
+.visitors-group .stat-pair .stat-label{font-size:12px;min-height:0;overflow-wrap:anywhere}
+.visitors-group .stat-pair strong{font-size:clamp(22px,2.8vw,32px)}
+.visitors-group .stat-pair small{font-size:10px;line-height:1.4;color:var(--muted)}
+@media(max-width:480px){.visitors-group .stat-pair{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.visitors-group .stat-pair .stat-card{padding:10px;min-height:120px}.visitors-group .stat-pair .stat-label{font-size:11px}}
+
 </head>
 <body>
 <header><div class="wrap"><div class="topline"><button class="menuBtn" id="homeMenuButton" type="button" aria-label="মেনু খুলুন" aria-expanded="false" aria-controls="homeMenu">☰</button></div></div></header>
@@ -218,8 +229,13 @@ main.wrap{padding-top:24px}
         <div class="stat-card academic-card"><div class="stat-icon">🎓</div><span class="stat-label">একাডেমিক কেয়ার</span><strong id="academicStudentCount">—</strong></div>
       </div>
     </section>
-    <div class="stat-card visitor-card"><div class="stat-icon">👁️</div><span class="stat-label">ভিজিটর সংখ্যা</span><strong id="totalVisitorCount">—</strong><small>ওয়েবসাইটের মোট ভিজিটর</small></div>
-      <div class="stat-card visitor-card live-visitor-card"><div class="stat-icon">🟢</div><span class="stat-label">বর্তমান ভিজিটর</span><strong id="currentVisitorCount">০</strong><small>গত ২ মিনিটে সক্রিয় · প্রতি ১৫ সেকেন্ডে আপডেট</small></div>
+    <section class="stat-group visitors-group" aria-label="ভিজিটর সংখ্যা">
+      <div class="stat-group-heading"><span>👁️</span><div><strong>ভিজিটর সংখ্যা</strong><small>ওয়েবসাইটের মোট ও বর্তমান ভিজিটর</small></div></div>
+      <div class="stat-pair">
+        <div class="stat-card total-visitor-card"><div class="stat-icon">🌐</div><span class="stat-label">মোট ভিজিটর</span><strong id="totalVisitorCount">—</strong></div>
+        <div class="stat-card current-visitor-card"><div class="stat-icon">🟢</div><span class="stat-label">বর্তমান ভিজিটর</span><strong id="currentVisitorCount">০</strong><small>গত ২ মিনিটে সক্রিয় · প্রতি ১৫ সেকেন্ডে আপডেট</small></div>
+      </div>
+    </section>
   </section>
   <div id="centralUser"><span id="centralUserEmail"></span><button id="centralLogout" type="button">লগআউট</button></div>
 </main>
