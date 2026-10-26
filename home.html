@@ -175,6 +175,13 @@ main.wrap{padding-top:24px}
 #managementSub .menuSubLink:hover{background:#edf4ff!important;border-color:#b9cdf7;color:#1d4ed8}
 
 </style>
+
+/* Keep the total and current visitor counters side by side at every screen size. */
+.stats-grid>.visitor-card{grid-column:auto!important;min-width:0;padding:clamp(11px,2vw,20px)}
+.stats-grid>.visitor-card .stat-label{overflow-wrap:anywhere}
+.stats-grid>.visitor-card strong{font-size:clamp(22px,3.2vw,42px)}
+@media(max-width:480px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.stats-grid>.visitor-card{min-height:138px;padding:10px}.stats-grid>.visitor-card .stat-label{font-size:11px}.stats-grid>.visitor-card small{font-size:10px;line-height:1.4}}
+
 </head>
 <body>
 <header><div class="wrap"><div class="topline"><button class="menuBtn" id="homeMenuButton" type="button" aria-label="মেনু খুলুন" aria-expanded="false" aria-controls="homeMenu">☰</button></div></div></header>
