@@ -24,6 +24,12 @@ body{background:#fff;color:var(--text)}
 .link{display:flex;align-items:center;gap:10px;padding:14px 12px;border-radius:12px;color:var(--text);font-weight:800;margin-top:5px;text-decoration:none}
 .link:hover{background:#f1f5f9}
 @media(max-width:520px){.topbar{padding:9px 12px}.siteLogo{width:min(330px,72vw);max-height:62px}.menuBtn{width:44px;height:44px}}
+
+/* Public homepage: time, date and visitor-local temperature */
+.info-wrap{max-width:1100px;margin:24px auto;padding:0 18px 28px;color:#172033;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif}
+.info-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}.info-head h2{font-size:20px;margin:0}.info-live{font-size:12px;color:#087e68;background:#e5f8f1;border:1px solid #c8eee1;border-radius:999px;padding:7px 10px;white-space:nowrap}
+.info-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}.info-card{background:#fff;border:1px solid #e2eaf4;border-radius:16px;padding:15px 13px;min-height:100px;box-shadow:0 7px 20px #173f7c08;min-width:0}.info-card span{display:block;font-size:12px;color:#708198;margin-bottom:8px;line-height:1.5}.info-card strong{font-size:15px;line-height:1.55;overflow-wrap:anywhere;color:#1b3454}
+@media(max-width:900px){.info-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:620px){.info-wrap{margin:17px auto;padding:0 12px 22px}.info-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.info-card{padding:12px;min-height:92px}.info-head h2{font-size:18px}.info-card strong{font-size:14px}}
 </style>
 </head>
 <body>
@@ -33,10 +39,33 @@ body{background:#fff;color:var(--text)}
   <button class="menuBtn" type="button" aria-label="মেনু খুলুন" aria-expanded="false" onclick="openMenu()">☰</button>
  </div>
 </header>
+<section class="info-wrap" aria-label="আজকের সময় ও তারিখ">
+ <div class="info-head"><h2>আজকের সময় ও তারিখ</h2><span class="info-live">● লাইভ আপডেট</span></div>
+ <div class="info-grid">
+  <div class="info-card"><span>🕒 আজকের বার ও সময়</span><strong><span id="todayDay">লোড হচ্ছে…</span> · <span id="liveTime">--:--:--</span></strong></div>
+  <div class="info-card"><span>📅 ইংরেজি তারিখ</span><strong id="englishDate">লোড হচ্ছে…</strong></div>
+  <div class="info-card"><span>🌾 বাংলা তারিখ</span><strong id="banglaDate">লোড হচ্ছে…</strong></div>
+  <div class="info-card"><span>🌙 হিজরি তারিখ</span><strong id="hijriDate">লোড হচ্ছে…</strong></div>
+  <div class="info-card"><span>🌡️ আপনার এলাকার তাপমাত্রা</span><strong id="temperature">লোকেশন খোঁজা হচ্ছে…</strong></div>
+ </div>
+</section>
+
 <script>
 function openMenu(){const m=document.getElementById("menu");m.style.display="block";document.body.style.overflow="hidden";document.querySelector(".menuBtn").setAttribute("aria-expanded","true")}
 function closeMenu(){document.getElementById("menu").style.display="none";document.body.style.overflow="";document.querySelector(".menuBtn").setAttribute("aria-expanded","false")}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
+</script>
+
+<script>
+(function(){
+ function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
+ function formatBanglaDate(date){const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const gy=+p.year,gm=+p.month,gd=+p.day;const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];const sy=(gm>4||(gm===4&&gd>=14))?gy:gy-1;let day=Math.floor((Date.UTC(gy,gm-1,gd)-Date.UTC(sy,3,14))/86400000);const lengths=[31,31,31,31,31,30,30,30,30,30,leapYear(gy+1)?30:29,30];let m=0;while(m<11&&day>=lengths[m])day-=lengths[m++];const bn=n=>new Intl.NumberFormat('bn-BD').format(n);return bn(day+1)+' '+names[m]+' '+bn(sy-593)+' বঙ্গাব্দ'}
+ function formatHijri(date){try{const p={};new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const months=['','মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];return new Intl.NumberFormat('bn-BD').format(+p.day)+' '+months[+p.month]+', '+new Intl.NumberFormat('bn-BD').format(+p.year)+' হিজরি'}catch(e){return 'হিজরি তারিখ পাওয়া যায়নি'}}
+ function updateClock(){const now=new Date();document.getElementById('todayDay').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now);document.getElementById('liveTime').textContent=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now);document.getElementById('englishDate').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'2-digit',month:'long',year:'numeric'}).format(now);document.getElementById('banglaDate').textContent=formatBanglaDate(now);document.getElementById('hijriDate').textContent=formatHijri(now)}
+ async function temperature(lat,lon){const el=document.getElementById('temperature');try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m&timezone=auto');if(!r.ok)throw Error();const d=await r.json();if(typeof d.current?.temperature_2m!=='number')throw Error();el.textContent=new Intl.NumberFormat('bn-BD',{maximumFractionDigits:1}).format(d.current.temperature_2m)+'°C'}catch(e){el.textContent='তাপমাত্রা পাওয়া যায়নি'}}
+ const temp=document.getElementById('temperature');if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>temperature(p.coords.latitude,p.coords.longitude),()=>{temp.textContent='তাপমাত্রা দেখতে লোকেশন অনুমতি দিন'}, {enableHighAccuracy:false,timeout:10000,maximumAge:600000})}else{temp.textContent='এই ব্রাউজারে লোকেশন সুবিধা নেই'}
+ updateClock();setInterval(updateClock,1000);
+})();
 </script>
 </body>
 </html>
