@@ -57,6 +57,18 @@ body{background:radial-gradient(ellipse at 15% 5%,#e7efff 0,transparent 36%),#f3
 .menuSubLink:hover,.menuSubLink:focus-visible{background:#edf4ff;color:#1557c0;outline:none}
 body.menu-open{overflow:hidden}
 
+
+.notice-ticker{max-width:1120px;margin:0 auto 22px;padding:0 18px}
+.notice-ticker-inner{display:flex;align-items:stretch;overflow:hidden;border-radius:12px;background:#0d3f91;color:#fff;min-height:46px}
+.notice-ticker-label{flex:0 0 auto;display:flex;align-items:center;padding:10px 15px;background:#d72d35;color:#fff;font-weight:800;z-index:1}
+.notice-ticker-viewport{overflow:hidden;display:flex;align-items:center;min-width:0;flex:1}
+.notice-ticker-track{display:flex;align-items:center;gap:34px;width:max-content;white-space:nowrap;animation:noticeTickerScroll 32s linear infinite;padding-left:100%}
+.notice-ticker-track:hover{animation-play-state:paused}
+.notice-ticker-item{display:inline-flex;align-items:center;gap:9px;font-size:14px}
+.notice-ticker-item a{color:#fff;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+@keyframes noticeTickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.notice-ticker-track{animation:none;white-space:normal;flex-wrap:wrap;padding:10px;gap:12px}}
+@media(max-width:620px){.notice-ticker{padding:0 12px;margin-bottom:16px}.notice-ticker-label{padding:9px 10px;font-size:12px}.notice-ticker-item{font-size:13px}}
 </style>
 </head>
 <body>
@@ -66,7 +78,7 @@ body.menu-open{overflow:hidden}
   <button class="menuBtn" id="menuOpen" type="button" aria-label="মেনু খুলুন" aria-controls="siteMenu" aria-expanded="false">☰</button>
  </div>
 </header>
-<div class="menuOverlay" id="menuOverlay" aria-hidden="true"><nav class="menuPanel" id="siteMenu" aria-label="প্রধান মেনু" tabindex="-1"><div class="menuHead"><strong>ফেইসবুক পাঠশালা</strong><button class="menuClose" id="menuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><div class="menuSection"><button class="menuSectionToggle" id="jobCareToggle" type="button" aria-expanded="false" aria-controls="jobCareSubmenu"><span>💼 জব কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="jobCareSubmenu" hidden><a class="menuSubLink" href="/exam/">📝 পরীক্ষা</a><a class="menuSubLink" href="https://fbpathshala.github.io/exam/study-materials.html">📚 স্টাডি ম্যাটেরিয়াল</a></div></div><div class="menuSection"><button class="menuSectionToggle" id="academicCareToggle" type="button" aria-expanded="false" aria-controls="academicCareSubmenu"><span>🎓 একাডেমিক কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="academicCareSubmenu" hidden><a class="menuSubLink" href="https://fbpathshala.github.io/academic/student.html">📝 পরীক্ষা</a><a class="menuSubLink" href="https://fbpathshala.github.io/exam/academic-study-materials.html">📚 স্টাডি ম্যাটেরিয়াল</a></div></div></nav></div>
+<div class="menuOverlay" id="menuOverlay" aria-hidden="true"><nav class="menuPanel" id="siteMenu" aria-label="প্রধান মেনু" tabindex="-1"><div class="menuHead"><strong>ফেইসবুক পাঠশালা</strong><button class="menuClose" id="menuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><div class="menuSection"><button class="menuSectionToggle" id="jobCareToggle" type="button" aria-expanded="false" aria-controls="jobCareSubmenu"><span>💼 জব কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="jobCareSubmenu" hidden><a class="menuSubLink" href="/exam/">📝 পরীক্ষা</a><a class="menuSubLink" href="https://fbpathshala.github.io/exam/study-materials.html">📚 স্টাডি ম্যাটেরিয়াল</a></div></div><div class="menuSection"><button class="menuSectionToggle" id="academicCareToggle" type="button" aria-expanded="false" aria-controls="academicCareSubmenu"><span>🎓 একাডেমিক কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="academicCareSubmenu" hidden><a class="menuSubLink" href="https://fbpathshala.github.io/academic/student.html">📝 পরীক্ষা</a><a class="menuSubLink" href="https://fbpathshala.github.io/exam/academic-study-materials.html">📚 স্টাডি ম্যাটেরিয়াল</a></div></div><div class="menuSection"><button class="menuSectionToggle" id="socialCareToggle" type="button" aria-expanded="false" aria-controls="socialCareSubmenu"><span>🔗 ফেইসবুক পাঠশালার সাথে যুক্ত হন</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="socialCareSubmenu" hidden><a class="menuSubLink" id="facebookPageLink" href="https://facebook.com/facebook.pathshala" target="_blank" rel="noopener noreferrer">👍 পেজে লাইক দিন</a><a class="menuSubLink" id="facebookGroupLink" href="https://facebook.com/facebook.pathshala" target="_blank" rel="noopener noreferrer">👥 গ্রুপে জয়েন করুন</a></div></div></nav></div>
 <main class="info-wrap">
  <div class="section-caption"><h2>আজকের সময় ও তারিখ</h2><span class="live-pill"><i></i> লাইভ আপডেট</span></div>
  <section class="date-grid" aria-label="আজকের সময় ও তারিখ">
@@ -91,6 +103,7 @@ body.menu-open{overflow:hidden}
   </div>
  </section>
 </main>
+<section class="notice-ticker" id="publicNoticeTicker" aria-label="সাম্প্রতিক নোটিশ" hidden><div class="notice-ticker-inner"><strong class="notice-ticker-label">📢 নোটিশ</strong><div class="notice-ticker-viewport" aria-live="polite"><div class="notice-ticker-track" id="noticeTickerTrack"></div></div></div></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
@@ -105,6 +118,27 @@ body.menu-open{overflow:hidden}
   siteMenu.addEventListener("click",e=>{if(e.target.closest("a"))setMenu(false)});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&menuOverlay.classList.contains("open"))setMenu(false)});
  const supabaseClient=window.supabase.createClient('https://ydvbnalhcnfqpxkkmywr.supabase.co','sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a');
+
+ async function loadPublicNotices(){
+  const wrap=document.getElementById('publicNoticeTicker'),track=document.getElementById('noticeTickerTrack');
+  try{
+   const now=new Date().toISOString();
+   const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,status,publish_at,expires_at,sort_order,display_label,created_at').eq('section','breaking-news').eq('status','published').order('sort_order').order('created_at',{ascending:false});
+   if(error)throw error;
+   const rows=(data||[]).filter(n=>(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
+   if(!rows.length){wrap.hidden=true;track.replaceChildren();return}
+   const escText=v=>String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+   const itemHtml=rows.map(n=>'<span class="notice-ticker-item"><span aria-hidden="true">◆</span><span>'+escText(n.title)+(n.body?' — '+escText(n.body):'')+'</span>'+(n.link_url?'<a href="'+escText(n.link_url)+'">'+escText(n.display_label||'বিস্তারিত দেখুন')+'</a>':'')+'</span>').join('');
+   track.innerHTML=itemHtml+itemHtml;wrap.hidden=false;
+  }catch(e){wrap.hidden=true;console.warn('নোটিশ লোড করা যায়নি')}
+ }
+ async function loadSocialLinks(){
+  try{
+   const {data,error}=await supabaseClient.from('site_content').select('title,link_url,status,sort_order').eq('section','social-links').eq('status','published').order('sort_order');
+   if(error)throw error;
+   for(const r of data||[]){const t=(r.title||'').toLowerCase();if(!r.link_url)continue;if(t.includes('গ্রুপ')||t.includes('group'))document.getElementById('facebookGroupLink').href=r.link_url;else if(t.includes('পেজ')||t.includes('page')||t.includes('লাইক'))document.getElementById('facebookPageLink').href=r.link_url}
+  }catch(e){console.warn('Facebook লিংক লোড করা যায়নি')}
+ }
  const bnCount=n=>new Intl.NumberFormat('bn-BD').format(n);
  async function loadLiveExamCounts(){
   const jobEl=document.getElementById('jobLiveCount'),academicEl=document.getElementById('academicLiveCount');
@@ -141,7 +175,7 @@ body.menu-open{overflow:hidden}
    console.warn('মোট পরীক্ষার সংখ্যা লোড করা যায়নি');
   }
  }
- loadLiveExamCounts();setInterval(loadLiveExamCounts,30000);
+ loadLiveExamCounts();setInterval(loadLiveExamCounts,30000);loadPublicNotices();setInterval(loadPublicNotices,60000);loadSocialLinks();
  loadTotalExamCounts();setInterval(loadTotalExamCounts,30000);
  function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
  function formatBanglaDate(date){const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const gy=+p.year,gm=+p.month,gd=+p.day;const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];const sy=(gm>4||(gm===4&&gd>=14))?gy:gy-1;let day=Math.floor((Date.UTC(gy,gm-1,gd)-Date.UTC(sy,3,14))/86400000);const lengths=[31,31,31,31,31,30,30,30,30,30,leapYear(gy+1)?30:29,30];let m=0;while(m<11&&day>=lengths[m])day-=lengths[m++];const bn=n=>new Intl.NumberFormat('bn-BD').format(n);return bn(day+1)+' '+names[m]+' '+bn(sy-593)+' বঙ্গাব্দ'}
