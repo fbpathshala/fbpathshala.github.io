@@ -46,6 +46,15 @@ body{background:radial-gradient(ellipse at 15% 5%,#e7efff 0,transparent 36%),#f3
 .menuClose{width:40px;height:40px;border:0;border-radius:10px;background:#eef2f8;color:#172033;font-size:25px;cursor:pointer}
 .menuLink{display:flex;align-items:center;gap:11px;margin-top:8px;padding:13px 12px;border-radius:11px;color:#1b3558;text-decoration:none;font-weight:750}
 .menuLink:hover,.menuLink:focus-visible{background:#edf4ff;color:#1557c0;outline:none}
+.menuSection{margin-top:8px;border-radius:11px;overflow:hidden}
+.menuSectionToggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 12px;border:0;border-radius:11px;background:transparent;color:#1b3558;font:inherit;font-weight:750;text-align:left;cursor:pointer}
+.menuSectionToggle:hover,.menuSectionToggle:focus-visible{background:#edf4ff;color:#1557c0;outline:none}
+.menuSectionToggle .menuChevron{transition:transform .2s}
+.menuSectionToggle[aria-expanded="true"] .menuChevron{transform:rotate(180deg)}
+.menuSubmenu{padding:0 0 5px 15px}
+.menuSubmenu[hidden]{display:none}
+.menuSubLink{display:block;padding:11px 12px;margin-top:4px;border-left:2px solid #d7e5fa;border-radius:0 9px 9px 0;color:#334a68;text-decoration:none;font-weight:650}
+.menuSubLink:hover,.menuSubLink:focus-visible{background:#edf4ff;color:#1557c0;outline:none}
 body.menu-open{overflow:hidden}
 
 </style>
@@ -57,7 +66,7 @@ body.menu-open{overflow:hidden}
   <button class="menuBtn" id="menuOpen" type="button" aria-label="মেনু খুলুন" aria-controls="siteMenu" aria-expanded="false">☰</button>
  </div>
 </header>
-<div class="menuOverlay" id="menuOverlay" aria-hidden="true"><nav class="menuPanel" id="siteMenu" aria-label="প্রধান মেনু" tabindex="-1"><div class="menuHead"><strong>ফেইসবুক পাঠশালা</strong><button class="menuClose" id="menuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><a class="menuLink" href="/">🏠 <span>হোম</span></a><a class="menuLink" href="/exam/">📝 <span>পরীক্ষা দিন</span></a><a class="menuLink" href="#live-exam-counts">📊 <span>চলমান পরীক্ষার সংখ্যা</span></a></nav></div>
+<div class="menuOverlay" id="menuOverlay" aria-hidden="true"><nav class="menuPanel" id="siteMenu" aria-label="প্রধান মেনু" tabindex="-1"><div class="menuHead"><strong>ফেইসবুক পাঠশালা</strong><button class="menuClose" id="menuClose" type="button" aria-label="মেনু বন্ধ করুন">×</button></div><a class="menuLink" href="/">🏠 <span>হোম</span></a><div class="menuSection"><button class="menuSectionToggle" id="jobCareToggle" type="button" aria-expanded="false" aria-controls="jobCareSubmenu"><span>💼 জব কেয়ার</span><span class="menuChevron" aria-hidden="true">⌄</span></button><div class="menuSubmenu" id="jobCareSubmenu" hidden><a class="menuSubLink" href="/exam/">📝 পরীক্ষা</a><a class="menuSubLink" href="/study-material/">📚 স্টাডি ম্যাটেরিয়াল</a></div></div><a class="menuLink" href="#live-exam-counts">📊 <span>চলমান পরীক্ষার সংখ্যা</span></a></nav></div>
 <main class="info-wrap">
  <div class="section-caption"><h2>আজকের সময় ও তারিখ</h2><span class="live-pill"><i></i> লাইভ আপডেট</span></div>
  <section class="date-grid" aria-label="আজকের সময় ও তারিখ">
@@ -82,6 +91,9 @@ body.menu-open{overflow:hidden}
   const menuClose=document.getElementById("menuClose");
   const menuOverlay=document.getElementById("menuOverlay");
   const siteMenu=document.getElementById("siteMenu");
+  const jobCareToggle=document.getElementById("jobCareToggle");
+  const jobCareSubmenu=document.getElementById("jobCareSubmenu");
+  jobCareToggle.addEventListener("click",()=>{const expanded=jobCareToggle.getAttribute("aria-expanded")==="true";jobCareToggle.setAttribute("aria-expanded",String(!expanded));jobCareSubmenu.hidden=expanded;});
   function setMenu(open){menuOverlay.classList.toggle("open",open);menuOverlay.setAttribute("aria-hidden",String(!open));menuOpen.setAttribute("aria-expanded",String(open));document.body.classList.toggle("menu-open",open);if(open)menuClose.focus();else menuOpen.focus();}
   menuOpen.addEventListener("click",()=>setMenu(true));
   menuClose.addEventListener("click",()=>setMenu(false));
