@@ -36,6 +36,16 @@ body{background:radial-gradient(ellipse at 15% 5%,#e7efff 0,transparent 36%),#f3
 @media(max-width:900px){.date-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:620px){.topbar{padding:9px 12px}.siteLogo{width:min(330px,72vw);max-height:62px}.menuBtn{width:44px;height:44px}.info-wrap{margin:17px auto;padding:0 12px 22px}.date-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.date-card{padding:13px;min-height:96px}.date-card strong{font-size:14px}.section-caption h2{font-size:18px}}
 @media(max-width:380px){.date-card{padding:11px}.date-card span{font-size:10px}}
+
+.important-info-section{margin-top:30px}
+.important-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.important-info-card{background:#fff;border:1px solid #dce7f5;border-radius:16px;padding:17px;box-shadow:0 7px 20px #173f7c07;min-width:0}
+.important-info-card h3{font-size:16px;line-height:1.55;margin:0 0 8px;color:#1b3454;overflow-wrap:anywhere}
+.important-info-card p{font-size:14px;line-height:1.8;margin:0 0 12px;color:#52647d;white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.important-info-open{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 14px;border-radius:10px;background:#1557c0;color:#fff;text-decoration:none;font-weight:800;font-size:13px}
+.important-info-empty{background:#fff;border:1px dashed #cbd8e8;border-radius:14px;padding:18px;color:#708198;line-height:1.7}
+@media(max-width:620px){.important-info-grid{grid-template-columns:1fr}.important-info-card{padding:14px}}
+
  
 .menuOverlay{position:fixed;inset:0;z-index:1000;background:rgba(10,25,48,.52);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
 .menuOverlay.open{opacity:1;visibility:visible}
@@ -102,6 +112,10 @@ body.menu-open{overflow:hidden}
    <div class="exam-count-card"><div class="count-icon">🎓</div><span class="count-label">একাডেমিক কেয়ারে মোট পরীক্ষা</span><strong id="academicTotalCount">লোড হচ্ছে…</strong></div>
   </div>
  </section>
+ <section class="important-info-section" id="importantInfoSection" aria-label="গুরুত্বপূর্ণ তথ্য ও পোস্ট">
+  <div class="section-caption"><h2>গুরুত্বপূর্ণ তথ্য ও পোস্ট</h2><span class="live-pill"><i></i> আপডেট</span></div>
+  <div class="important-info-grid" id="importantInfoGrid"><div class="important-info-empty">গুরুত্বপূর্ণ তথ্য লোড হচ্ছে…</div></div>
+ </section>
 </main>
 <section class="notice-ticker" id="publicNoticeTicker" aria-label="সাম্প্রতিক নোটিশ" hidden><div class="notice-ticker-inner"><strong class="notice-ticker-label">📢 নোটিশ</strong><div class="notice-ticker-viewport" aria-live="polite"><div class="notice-ticker-track" id="noticeTickerTrack"></div></div></div></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -119,6 +133,23 @@ body.menu-open{overflow:hidden}
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&menuOverlay.classList.contains("open"))setMenu(false)});
  const supabaseClient=window.supabase.createClient('https://ydvbnalhcnfqpxkkmywr.supabase.co','sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a');
 
+ async function loadImportantInfo(){
+  const grid=document.getElementById('importantInfoGrid');
+  try{
+   const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,status,sort_order,created_at').eq('section','important-links').eq('status','published').order('sort_order').order('created_at',{ascending:false});
+   if(error)throw error;
+   const rows=data||[];
+   grid.replaceChildren();
+   if(!rows.length){const empty=document.createElement('div');empty.className='important-info-empty';empty.textContent='এখনো কোনো গুরুত্বপূর্ণ তথ্য প্রকাশ করা হয়নি।';grid.append(empty);return}
+   rows.forEach(row=>{
+    const card=document.createElement('article');card.className='important-info-card';
+    const title=document.createElement('h3');title.textContent=row.title||'গুরুত্বপূর্ণ তথ্য';card.append(title);
+    if(row.body){const body=document.createElement('p');body.textContent=row.body;card.append(body)}
+    const link=document.createElement('a');link.className='important-info-open';link.href='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(row.id);link.textContent=row.link_url&&/\\.pdf(?:$|[?#])/i.test(row.link_url)?'অনলাইনে PDF পড়ুন':'বিস্তারিত পড়ুন';card.append(link);
+    grid.append(card);
+   });
+  }catch(e){grid.replaceChildren();const errorBox=document.createElement('div');errorBox.className='important-info-empty';errorBox.textContent='গুরুত্বপূর্ণ তথ্য এখন লোড করা যাচ্ছে না। পরে আবার চেষ্টা করুন।';grid.append(errorBox);console.warn('গুরুত্বপূর্ণ তথ্য লোড করা যায়নি')}
+ }
  async function loadPublicNotices(){
   const wrap=document.getElementById('publicNoticeTicker'),track=document.getElementById('noticeTickerTrack');
   try{
@@ -178,7 +209,7 @@ body.menu-open{overflow:hidden}
    console.warn('মোট পরীক্ষার সংখ্যা লোড করা যায়নি');
   }
  }
- loadLiveExamCounts();setInterval(loadLiveExamCounts,30000);loadPublicNotices();setInterval(loadPublicNotices,60000);loadSocialLinks();
+ loadLiveExamCounts();setInterval(loadLiveExamCounts,30000);loadPublicNotices();setInterval(loadPublicNotices,60000);loadImportantInfo();setInterval(loadImportantInfo,60000);loadSocialLinks();
  loadTotalExamCounts();setInterval(loadTotalExamCounts,30000);
  function leapYear(y){return y%4===0&&(y%100!==0||y%400===0)}
  function formatBanglaDate(date){const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>p[x.type]=x.value);const gy=+p.year,gm=+p.month,gd=+p.day;const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];const sy=(gm>4||(gm===4&&gd>=14))?gy:gy-1;let day=Math.floor((Date.UTC(gy,gm-1,gd)-Date.UTC(sy,3,14))/86400000);const lengths=[31,31,31,31,31,30,30,30,30,30,leapYear(gy+1)?30:29,30];let m=0;while(m<11&&day>=lengths[m])day-=lengths[m++];const bn=n=>new Intl.NumberFormat('bn-BD').format(n);return bn(day+1)+' '+names[m]+' '+bn(sy-593)+' বঙ্গাব্দ'}
