@@ -145,7 +145,7 @@ body.menu-open{overflow:hidden}
     const card=document.createElement('article');card.className='important-info-card';
     const title=document.createElement('h3');title.textContent=row.title||'গুরুত্বপূর্ণ তথ্য';card.append(title);
     if(row.body){const body=document.createElement('p');body.textContent=row.body;card.append(body)}
-    const link=document.createElement('a');link.className='important-info-open';link.href='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(row.id);link.textContent=row.link_url&&/\\.pdf(?:$|[?#])/i.test(row.link_url)?'অনলাইনে PDF পড়ুন':'বিস্তারিত পড়ুন';card.append(link);
+    const link=document.createElement('a');link.className='important-info-open';link.href='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(row.id);link.textContent=row.link_url&&/\.pdf(?:$|[?#])/i.test(row.link_url)?'অনলাইনে PDF পড়ুন':'বিস্তারিত পড়ুন';card.append(link);
     grid.append(card);
    });
   }catch(e){grid.replaceChildren();const errorBox=document.createElement('div');errorBox.className='important-info-empty';errorBox.textContent='গুরুত্বপূর্ণ তথ্য এখন লোড করা যাচ্ছে না। পরে আবার চেষ্টা করুন।';grid.append(errorBox);console.warn('গুরুত্বপূর্ণ তথ্য লোড করা যায়নি')}
