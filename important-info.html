@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d3f91">
+<title>গুরুত্বপূর্ণ তথ্য — ফেইসবুক পাঠশালা</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif}
+header{background:linear-gradient(135deg,#0d3f91,#1557c0);color:#fff;padding:17px 16px}
+header .head{max-width:1000px;margin:auto;display:flex;align-items:center;gap:12px;justify-content:space-between}
+header a{color:#fff;text-decoration:none;font-weight:800}
+main{max-width:1000px;margin:22px auto;padding:0 14px 40px}
+.panel{background:#fff;border:1px solid #dce7f5;border-radius:16px;padding:clamp(16px,3vw,28px);box-shadow:0 8px 24px #173f7c08}
+h1{font-size:clamp(21px,4vw,30px);line-height:1.45;margin:0 0 16px;color:#1b3454;overflow-wrap:anywhere}
+#bodyText{font-size:16px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere}
+#viewer{margin-top:20px}
+.pdf-viewer{width:100%;height:min(78vh,1000px);min-height:480px;border:1px solid #dce7f5;border-radius:10px;background:#eef2f8}
+.image-viewer{display:block;max-width:100%;height:auto;max-height:78vh;object-fit:contain;margin:auto;border-radius:10px}
+.action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:18px;padding:11px 15px;border-radius:10px;background:#1557c0;color:#fff;text-decoration:none;font-weight:800}
+.note{font-size:13px;color:#708198;line-height:1.7;margin-top:14px}
+.error{padding:16px;background:#fff4f4;border:1px solid #ffd5d5;border-radius:12px;color:#9f2222}
+[hidden]{display:none!important}
+body{user-select:none;-webkit-user-select:none}
+@media(max-width:600px){main{margin:14px auto;padding:0 10px 28px}.pdf-viewer{min-height:58vh;height:68vh}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<header><div class="head"><strong>🎓 ফেইসবুক পাঠশালা</strong><a href="/">← হোমপেজে ফিরুন</a></div></header>
+<main><article class="panel">
+<h1 id="title">তথ্য লোড হচ্ছে…</h1>
+<div id="bodyText"></div>
+<div id="viewer"></div>
+<div id="status" class="note" role="status">অনুগ্রহ করে অপেক্ষা করুন…</div>
+</article></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function(){
+ const title=document.getElementById('title'),body=document.getElementById('bodyText'),viewer=document.getElementById('viewer'),status=document.getElementById('status');
+ const client=window.supabase.createClient('https://ydvbnalhcnfqpxkkmywr.supabase.co','sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a');
+ const id=new URLSearchParams(location.search).get('id');
+ function safeUrl(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(e){return ''}}
+ try{
+  if(!id||!/^\d+$/.test(id))throw new Error('এই তথ্যের ঠিকানা সঠিক নয়।');
+  const {data,error}=await client.from('site_content').select('id,title,body,link_url,status,section').eq('id',id).eq('section','important-links').eq('status','published').maybeSingle();
+  if(error)throw error;
+  if(!data)throw new Error('তথ্যটি পাওয়া যায়নি অথবা এটি বর্তমানে প্রকাশিত নেই।');
+  title.textContent=data.title||'গুরুত্বপূর্ণ তথ্য';
+  body.textContent=data.body||'';
+  const url=safeUrl(data.link_url||'');
+  if(data.link_url&&!url)throw new Error('এই তথ্যের লিংকটি নিরাপদভাবে খোলা যাচ্ছে না.');
+  if(url){
+   const clean=url.split('#')[0],path=(new URL(url)).pathname.toLowerCase();
+   if(path.endsWith('.pdf')){
+    const frame=document.createElement('iframe');frame.className='pdf-viewer';frame.title='PDF অনলাইনে পড়ুন';frame.src=url+'#toolbar=0&navpanes=0&scrollbar=1';frame.setAttribute('loading','lazy');frame.setAttribute('referrerpolicy','no-referrer');viewer.append(frame);
+    status.textContent='PDF ওয়েবসাইটের ভেতরেই পড়ুন। এই পেজে কোনো ডাউনলোড বাটন নেই। PDF লিংকটি সরাসরি PDF ফাইল হতে হবে।';
+   }else if(/\.(png|jpe?g|gif|webp|avif)$/i.test(path)){
+    const img=document.createElement('img');img.className='image-viewer';img.alt=data.title||'গুরুত্বপূর্ণ ছবি';img.src=url;viewer.append(img);status.textContent='ছবিটি ওয়েবসাইটেই দেখা যাবে।';
+   }else{
+    const a=document.createElement('a');a.className='action';a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='মূল পোস্ট / পেজ দেখুন';viewer.append(a);status.textContent='এই তথ্যের জন্য একটি বাইরের পেজের লিংক দেওয়া হয়েছে।';
+   }
+  }else status.textContent='এই তথ্যটি ওয়েবসাইটে লিখিত আকারে প্রকাশিত হয়েছে।';
+ }catch(e){title.textContent='তথ্যটি দেখানো যাচ্ছে না';body.textContent='';viewer.replaceChildren();status.className='error';status.textContent=e.message||'তথ্য লোড করতে সমস্যা হয়েছে।'}
+ document.addEventListener('contextmenu',e=>e.preventDefault());
+ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['s','p','u'].includes((e.key||'').toLowerCase())){e.preventDefault()}});
+})();
+</script>
+</body>
+</html>
