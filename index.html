@@ -145,7 +145,7 @@ body.menu-open{overflow:hidden}
     const card=document.createElement('article');card.className='important-info-card';
     const title=document.createElement('h3');title.textContent=row.title||'গুরুত্বপূর্ণ তথ্য';card.append(title);
     if(row.body){const body=document.createElement('p');body.textContent=row.body;card.append(body)}
-    const link=document.createElement('a');link.className='important-info-open';const target=(row.link_url||'').trim();const isFile=/\.(pdf|png|jpe?g|gif|webp|avif)(?:$|[?#])/i.test(target);link.href=target&&!isFile?target:'https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(row.id);link.target='_blank';link.rel='noopener noreferrer';link.textContent=target&&/\.pdf(?:$|[?#])/i.test(target)?'অনলাইনে PDF পড়ুন':target&&!isFile?'সরাসরি লিংক খুলুন':'বিস্তারিত পড়ুন';card.append(link);
+    const link=document.createElement('a');link.className='important-info-open';const target=(row.link_url||'').trim();link.href='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(row.id);link.target='_blank';link.rel='noopener noreferrer';link.textContent=target&&/\.pdf(?:$|[?#])/i.test(target)?'বিস্তারিত দেখুন • PDF পড়ুন':target?'বিস্তারিত দেখুন • পোস্ট/লিংক খুলুন':'বিস্তারিত পড়ুন';card.append(link);
     grid.append(card);
    });
   }catch(e){grid.replaceChildren();const errorBox=document.createElement('div');errorBox.className='important-info-empty';errorBox.textContent='গুরুত্বপূর্ণ তথ্য এখন লোড করা যাচ্ছে না। পরে আবার চেষ্টা করুন।';grid.append(errorBox);console.warn('গুরুত্বপূর্ণ তথ্য লোড করা যায়নি')}
