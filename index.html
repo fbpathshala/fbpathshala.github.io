@@ -136,7 +136,7 @@ body.menu-open{overflow:hidden}
  async function loadImportantInfo(){
   const grid=document.getElementById('importantInfoGrid');
   try{
-   const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,status,sort_order,created_at').eq('section','important-links').eq('status','published').order('sort_order').order('created_at',{ascending:false});
+   const {data,error}=await supabaseClient.from('site_content').select('id,title,category,body,link_url,attachments,status,sort_order,created_at').eq('section','important-links').eq('status','published').order('sort_order').order('created_at',{ascending:false});
    if(error)throw error;
    const rows=data||[];
    grid.replaceChildren();
@@ -144,6 +144,7 @@ body.menu-open{overflow:hidden}
    rows.forEach(row=>{
     const card=document.createElement('article');card.className='important-info-card';
     const title=document.createElement('h3');title.textContent=row.title||'গুরুত্বপূর্ণ তথ্য';card.append(title);
+    if(row.category||row.created_at){const meta=document.createElement('div');meta.className='meta';meta.style.cssText='font-size:12px;color:#708198;margin:-2px 0 9px';const date=row.created_at?new Date(row.created_at).toLocaleDateString('bn-BD'):'';meta.textContent=[row.category,date].filter(Boolean).join(' • ');card.append(meta)}
     if(row.body){const body=document.createElement('p');body.textContent=row.body;card.append(body)}
     const link=document.createElement('a');link.className='important-info-open';const target=(row.link_url||'').trim();link.href='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(row.id);link.target='_blank';link.rel='noopener noreferrer';link.textContent=target&&/\.pdf(?:$|[?#])/i.test(target)?'বিস্তারিত দেখুন • PDF পড়ুন':target?'বিস্তারিত দেখুন • পোস্ট/লিংক খুলুন':'বিস্তারিত পড়ুন';card.append(link);
     grid.append(card);
