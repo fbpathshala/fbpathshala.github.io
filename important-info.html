@@ -42,24 +42,29 @@ body{user-select:none;-webkit-user-select:none}
  function safeUrl(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(e){return ''}}
  try{
   if(!id||!/^\d+$/.test(id))throw new Error('এই তথ্যের ঠিকানা সঠিক নয়।');
-  const {data,error}=await client.from('site_content').select('id,title,body,link_url,status,section').eq('id',id).eq('section','important-links').eq('status','published').maybeSingle();
+  const {data,error}=await client.from('site_content').select('id,title,category,body,link_url,attachments,status,section,created_at').eq('id',id).eq('section','important-links').eq('status','published').maybeSingle();
   if(error)throw error;
   if(!data)throw new Error('তথ্যটি পাওয়া যায়নি অথবা এটি বর্তমানে প্রকাশিত নেই।');
   title.textContent=data.title||'গুরুত্বপূর্ণ তথ্য';
+  if(data.category||data.created_at){const meta=document.createElement('div');meta.className='note';meta.style.margin='0 0 14px';const date=data.created_at?new Date(data.created_at).toLocaleDateString('bn-BD'):'';meta.textContent=[data.category,date].filter(Boolean).join(' • ');title.insertAdjacentElement('afterend',meta)}
   body.textContent=data.body||'';
-  const url=safeUrl(data.link_url||'');
-  if(data.link_url&&!url)throw new Error('এই তথ্যের লিংকটি নিরাপদভাবে খোলা যাচ্ছে না.');
-  if(url){
-   const clean=url.split('#')[0],path=(new URL(url)).pathname.toLowerCase();
+  const attachmentList=Array.isArray(data.attachments)?data.attachments:[];
+  let shown=0;
+  function renderTarget(value,label){
+   const url=safeUrl(value||'');if(!url)return;
+   const path=(new URL(url)).pathname.toLowerCase();
    if(path.endsWith('.pdf')){
-    const frame=document.createElement('iframe');frame.className='pdf-viewer';frame.title='PDF অনলাইনে পড়ুন';frame.src=url+'#toolbar=0&navpanes=0&scrollbar=1';frame.setAttribute('loading','lazy');frame.setAttribute('referrerpolicy','no-referrer');viewer.append(frame);
-    status.textContent='PDF ওয়েবসাইটের ভেতরেই পড়ুন। এই পেজে কোনো ডাউনলোড বাটন নেই। PDF লিংকটি সরাসরি PDF ফাইল হতে হবে।';
+    const frame=document.createElement('iframe');frame.className='pdf-viewer';frame.title=label||'PDF অনলাইনে পড়ুন';frame.src=url+'#toolbar=0&navpanes=0&scrollbar=1';frame.setAttribute('loading','lazy');frame.setAttribute('referrerpolicy','no-referrer');viewer.append(frame);shown++;
    }else if(/\.(png|jpe?g|gif|webp|avif)$/i.test(path)){
-    const img=document.createElement('img');img.className='image-viewer';img.alt=data.title||'গুরুত্বপূর্ণ ছবি';img.src=url;viewer.append(img);status.textContent='ছবিটি ওয়েবসাইটেই দেখা যাবে।';
+    const img=document.createElement('img');img.className='image-viewer';img.alt=label||data.title||'গুরুত্বপূর্ণ ছবি';img.src=url;viewer.append(img);shown++;
    }else{
-    const a=document.createElement('a');a.className='action';a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='মূল পোস্ট / পেজ দেখুন';viewer.append(a);status.textContent='এই তথ্যের জন্য একটি বাইরের পেজের লিংক দেওয়া হয়েছে।';
+    const a=document.createElement('a');a.className='action';a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=label||'মূল পোস্ট / পেজ দেখুন';viewer.append(a);shown++;
    }
-  }else status.textContent='এই তথ্যটি ওয়েবসাইটে লিখিত আকারে প্রকাশিত হয়েছে।';
+  }
+  for(const file of attachmentList){if(file&&file.url)renderTarget(file.url,file.name||'সংযুক্ত ফাইল দেখুন')}
+  if(data.link_url)renderTarget(data.link_url,'মূল পোস্ট / পেজ দেখুন');
+  if(shown){status.textContent='সংযুক্ত PDF, ছবি বা বাইরের লিংক নিচে দেখুন। PDF এই পেজেই পড়া যাবে।'}
+  else status.textContent='এই তথ্যটি ওয়েবসাইটে লিখিত আকারে প্রকাশিত হয়েছে।';
  }catch(e){title.textContent='তথ্যটি দেখানো যাচ্ছে না';body.textContent='';viewer.replaceChildren();status.className='error';status.textContent=e.message||'তথ্য লোড করতে সমস্যা হয়েছে।'}
  document.addEventListener('contextmenu',e=>e.preventDefault());
  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['s','p','u'].includes((e.key||'').toLowerCase())){e.preventDefault()}});
