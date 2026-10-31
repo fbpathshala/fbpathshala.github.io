@@ -162,10 +162,13 @@ body.menu-open{overflow:hidden}
    if(error)throw error;
    const rows=(data||[]).filter(n=>(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
    if(!rows.length){wrap.hidden=true;track.replaceChildren();return}
+   const unresolvedMaterialIds=[...new Set(rows.filter(n=>!(n.link_url||'').trim()&&n.source_type==='study_materials'&&n.source_id).map(n=>n.source_id))];
+   let materialDepartmentById={};
+   if(unresolvedMaterialIds.length){const {data:materials,error:materialsError}=await supabaseClient.from('study_materials').select('id,department').in('id',unresolvedMaterialIds);if(materialsError)throw materialsError;for(const material of materials||[])materialDepartmentById[String(material.id)]=material.department;}
    function safeTarget(n){
     let target=(n.link_url||'').trim();
     if(!target&&n.source_type==='site_content'&&n.source_id)target='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(n.source_id);
-    if(!target&&n.source_type==='study_materials'&&n.source_id)target='https://fbpathshala.github.io/exam/study-materials.html#material-'+encodeURIComponent(n.source_id);
+    if(!target&&n.source_type==='study_materials'&&n.source_id){const page=materialDepartmentById[String(n.source_id)]==='academic_care'?'academic-study-materials.html':'study-materials.html';target='https://fbpathshala.github.io/exam/'+page+'#material-'+encodeURIComponent(n.source_id);}
     if(!target)return '';
     try{const u=new URL(target,location.href);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(e){return ''}
    }
