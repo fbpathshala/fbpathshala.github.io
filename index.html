@@ -158,14 +158,32 @@ body.menu-open{overflow:hidden}
    const {data:setting,error:settingError}=await supabaseClient.from('site_feature_settings').select('enabled').eq('feature_key','breaking_news_ticker').maybeSingle();
    if(settingError)throw settingError;
    if(setting&&setting.enabled===false){wrap.hidden=true;track.replaceChildren();return}
-   const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,status,publish_at,expires_at,sort_order,display_label,created_at').eq('section','breaking-news').eq('status','published').order('sort_order').order('created_at',{ascending:false});
+   const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,source_type,source_id,status,publish_at,expires_at,sort_order,display_label,created_at').eq('section','breaking-news').eq('status','published').order('sort_order').order('created_at',{ascending:false});
    if(error)throw error;
    const rows=(data||[]).filter(n=>(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
    if(!rows.length){wrap.hidden=true;track.replaceChildren();return}
-   const escText=v=>String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-   const itemHtml=rows.map(n=>'<span class="notice-ticker-item"><span aria-hidden="true">◆</span><span>'+escText(n.title)+(n.body?' — '+escText(n.body):'')+'</span>'+(n.link_url?'<a href="'+escText(n.link_url)+'">'+escText(n.display_label||'বিস্তারিত দেখুন')+'</a>':'')+'</span>').join('');
-   track.innerHTML=itemHtml+itemHtml;wrap.hidden=false;
-  }catch(e){wrap.hidden=true;console.warn('নোটিশ লোড করা যায়নি')}
+   function safeTarget(n){
+    let target=(n.link_url||'').trim();
+    if(!target&&n.source_type==='site_content'&&n.source_id)target='https://fbpathshala.github.io/important-info.html?id='+encodeURIComponent(n.source_id);
+    if(!target&&n.source_type==='study_materials'&&n.source_id)target='https://fbpathshala.github.io/exam/study-materials.html#material-'+encodeURIComponent(n.source_id);
+    if(!target)return '';
+    try{const u=new URL(target,location.href);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(e){return ''}
+   }
+   const makeItem=n=>{
+    const item=document.createElement('span');item.className='notice-ticker-item';
+    const mark=document.createElement('span');mark.setAttribute('aria-hidden','true');mark.textContent='◆';item.append(mark);
+    const copy=document.createElement('span');copy.textContent=(n.title||'')+(n.body?' — '+n.body:'');item.append(copy);
+    const target=safeTarget(n);
+    if(target){const a=document.createElement('a');a.href=target;a.textContent=n.display_label||'বিস্তারিত দেখুন';a.target='_blank';a.rel='noopener noreferrer';item.append(a)}
+    return item;
+   };
+   track.replaceChildren();
+   const first=document.createElement('div');first.className='notice-ticker-sequence';
+   const second=document.createElement('div');second.className='notice-ticker-sequence';second.setAttribute('aria-hidden','true');
+   rows.forEach(n=>first.append(makeItem(n)));
+   rows.forEach(n=>second.append(makeItem(n)));
+   track.append(first,second);wrap.hidden=false;
+  }catch(e){wrap.hidden=true;track.replaceChildren();console.warn('নোটিশ লোড করা যায়নি',e)}
  }
  async function loadSocialLinks(){
   try{
