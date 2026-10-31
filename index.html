@@ -74,8 +74,8 @@ body.menu-open{overflow:hidden}
 .notice-ticker-viewport{overflow:hidden;display:flex;align-items:center;min-width:0;flex:1}
 .notice-ticker-track{display:flex;align-items:center;gap:34px;width:max-content;white-space:nowrap;animation:noticeTickerScroll 32s linear infinite;padding-left:100%}
 .notice-ticker-track:hover{animation-play-state:paused}.notice-ticker-sequence{display:flex;align-items:center;gap:34px;flex:0 0 auto}
-.notice-ticker-item{display:inline-flex;align-items:center;gap:9px;font-size:14px}
-.notice-ticker-item a{color:#fff;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+.notice-ticker-item{display:inline-flex;align-items:center;gap:9px;font-size:14px;color:#fff;text-decoration:none}
+.notice-ticker-link-label{color:#fff;text-decoration:underline;text-underline-offset:3px;font-weight:800}
 @keyframes noticeTickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.notice-ticker-track{animation:none;white-space:normal;flex-wrap:wrap;padding:10px;gap:12px}}
 @media(max-width:620px){.notice-ticker{padding:0 12px;margin-bottom:16px}.notice-ticker-label{padding:9px 10px;font-size:12px}.notice-ticker-item{font-size:13px}}
