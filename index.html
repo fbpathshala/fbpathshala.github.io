@@ -170,11 +170,12 @@ body.menu-open{overflow:hidden}
     try{const u=new URL(target,location.href);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(e){return ''}
    }
    const makeItem=n=>{
-    const item=document.createElement('span');item.className='notice-ticker-item';
+    const target=safeTarget(n);
+    const item=document.createElement(target?'a':'span');item.className='notice-ticker-item';
+    if(target){item.href=target;item.target='_blank';item.rel='noopener noreferrer';item.setAttribute('aria-label',(n.title||'নোটিশ')+' — বিস্তারিত দেখুন')}
     const mark=document.createElement('span');mark.setAttribute('aria-hidden','true');mark.textContent='◆';item.append(mark);
     const copy=document.createElement('span');copy.textContent=(n.title||'')+(n.body?' — '+n.body:'');item.append(copy);
-    const target=safeTarget(n);
-    if(target){const a=document.createElement('a');a.href=target;a.textContent=n.display_label||'বিস্তারিত দেখুন';a.target='_blank';a.rel='noopener noreferrer';item.append(a)}
+    if(target){const label=document.createElement('span');label.className='notice-ticker-link-label';label.textContent=n.display_label||'বিস্তারিত দেখুন';item.append(label)}
     return item;
    };
    track.replaceChildren();
