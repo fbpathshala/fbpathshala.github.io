@@ -16,7 +16,7 @@ h1{font-size:clamp(21px,4vw,30px);line-height:1.45;margin:0 0 16px;color:#1b3454
 #bodyText{font-size:16px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere}
 #viewer{margin-top:20px}
 .pdf-viewer{width:100%;height:min(78vh,1000px);min-height:480px;border:1px solid #dce7f5;border-radius:10px;background:#eef2f8}
-.image-viewer{display:block;max-width:100%;height:auto;max-height:78vh;object-fit:contain;margin:auto;border-radius:10px}
+.image-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin-top:18px}.image-gallery figure{margin:0;min-width:0;background:#f7f9fc;border:1px solid #e2eaf4;border-radius:12px;padding:8px}.image-viewer{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;margin:auto;border-radius:8px}.image-group-caption{grid-column:1/-1;margin:0;padding:10px 12px;border-radius:10px;background:#edf4ff;color:#334a68;font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
 .action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:18px;padding:11px 15px;border-radius:10px;background:#1557c0;color:#fff;text-decoration:none;font-weight:800}
 .note{font-size:13px;color:#708198;line-height:1.7;margin-top:14px}
 .error{padding:16px;background:#fff4f4;border:1px solid #ffd5d5;border-radius:12px;color:#9f2222}
@@ -47,8 +47,11 @@ body{user-select:none;-webkit-user-select:none}
   if(!data)throw new Error('তথ্যটি পাওয়া যায়নি অথবা এটি বর্তমানে প্রকাশিত নেই।');
   title.textContent=data.title||'গুরুত্বপূর্ণ তথ্য';
   if(data.category||data.created_at){const meta=document.createElement('div');meta.className='note';meta.style.margin='0 0 14px';const date=data.created_at?new Date(data.created_at).toLocaleDateString('bn-BD'):'';meta.textContent=[data.category,date].filter(Boolean).join(' • ');title.insertAdjacentElement('afterend',meta)}
-  body.textContent=data.body||'';
   const attachmentList=Array.isArray(data.attachments)?data.attachments:[];
+  const imageFiles=attachmentList.filter(file=>file&&file.url&&/\.(png|jpe?g|gif|webp|avif)(?:[?#]|$)/i.test(new URL(file.url).pathname));
+  const gallery=imageFiles.length?document.createElement('div'):null;
+  if(gallery){gallery.className='image-gallery';viewer.append(gallery)}
+  body.textContent=imageFiles.length?'':(data.body||'');
   let shown=0;
   function renderTarget(value,label){
    const url=safeUrl(value||'');if(!url)return;
@@ -56,12 +59,13 @@ body{user-select:none;-webkit-user-select:none}
    if(path.endsWith('.pdf')){
     const frame=document.createElement('iframe');frame.className='pdf-viewer';frame.title=label||'PDF অনলাইনে পড়ুন';frame.src=url+'#toolbar=0&navpanes=0&scrollbar=1';frame.setAttribute('loading','lazy');frame.setAttribute('referrerpolicy','no-referrer');viewer.append(frame);shown++;
    }else if(/\.(png|jpe?g|gif|webp|avif)$/i.test(path)){
-    const img=document.createElement('img');img.className='image-viewer';img.alt=label||data.title||'গুরুত্বপূর্ণ ছবি';img.src=url;viewer.append(img);shown++;
+    const figure=document.createElement('figure');const img=document.createElement('img');img.className='image-viewer';img.alt=data.title||'গুরুত্বপূর্ণ ছবি';img.src=url;figure.append(img);(gallery||viewer).append(figure);shown++;
    }else{
     const a=document.createElement('a');a.className='action';a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=label||'মূল পোস্ট / পেজ দেখুন';viewer.append(a);shown++;
    }
   }
   for(const file of attachmentList){if(file&&file.url)renderTarget(file.url,file.name||'সংযুক্ত ফাইল দেখুন')}
+  if(imageFiles.length){const caption=document.createElement('figcaption');caption.className='image-group-caption';caption.textContent=data.body||data.title||'সংযুক্ত ছবিসমূহ';gallery.append(caption)}
   if(data.link_url)renderTarget(data.link_url,'মূল পোস্ট / পেজ দেখুন');
   if(shown){status.textContent='সংযুক্ত PDF, ছবি বা বাইরের লিংক নিচে দেখুন। PDF এই পেজেই পড়া যাবে।'}
   else status.textContent='এই তথ্যটি ওয়েবসাইটে লিখিত আকারে প্রকাশিত হয়েছে।';
