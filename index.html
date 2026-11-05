@@ -117,7 +117,7 @@ body.menu-open{overflow:hidden}
   <div class="important-info-grid" id="importantInfoGrid"><div class="important-info-empty">গুরুত্বপূর্ণ তথ্য লোড হচ্ছে…</div></div>
  </section>
 </main>
-<section class="notice-ticker" id="publicNoticeTicker" aria-label="সাম্প্রতিক নোটিশ" hidden><div class="notice-ticker-inner"><strong class="notice-ticker-label">📢 নোটিশ</strong><div class="notice-ticker-viewport" aria-live="polite"><div class="notice-ticker-track" id="noticeTickerTrack"></div></div></div></section>
+<section class="notice-ticker" id="publicNoticeTicker" aria-label="সাম্প্রতিক নোটিশ" hidden><div class="notice-ticker-inner"><strong class="notice-ticker-label">📢 আপডেট</strong><div class="notice-ticker-viewport" aria-live="polite"><div class="notice-ticker-track" id="noticeTickerTrack"></div></div></div></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
@@ -177,10 +177,11 @@ body.menu-open{overflow:hidden}
    const makeItem=n=>{
     const target=safeTarget(n);
     const item=document.createElement(target?'a':'span');item.className='notice-ticker-item';
-    if(target){item.href=target;item.target='_blank';item.rel='noopener noreferrer';item.setAttribute('aria-label',(n.title||'নোটিশ')+' — বিস্তারিত দেখুন')}
+    const displayType=(n.display_label||'').trim()|| (target?'বিস্তারিত দেখুন':'নোটিশ');
+    if(target){item.href=target;item.target='_blank';item.rel='noopener noreferrer';item.setAttribute('aria-label',(n.title||'আপডেট')+' — '+displayType)}
     const mark=document.createElement('span');mark.setAttribute('aria-hidden','true');mark.textContent='◆';item.append(mark);
     const copy=document.createElement('span');copy.textContent=(n.title||'')+(n.body?' — '+n.body:'');item.append(copy);
-    if(target){const label=document.createElement('span');label.className='notice-ticker-link-label';label.textContent=n.display_label||'বিস্তারিত দেখুন';item.append(label)}
+    const label=document.createElement('span');label.className='notice-ticker-link-label';label.textContent=displayType;item.append(label);
     return item;
    };
    track.replaceChildren();
