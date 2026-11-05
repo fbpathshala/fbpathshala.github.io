@@ -75,7 +75,9 @@ body.menu-open{overflow:hidden}
 .notice-ticker-track{display:flex;align-items:center;gap:34px;width:max-content;white-space:nowrap;animation:noticeTickerScroll 32s linear infinite;padding-left:100%}
 .notice-ticker-track:hover{animation-play-state:paused}.notice-ticker-sequence{display:flex;align-items:center;gap:34px;flex:0 0 auto}
 .notice-ticker-item{display:inline-flex;align-items:center;gap:9px;font-size:14px;color:#fff;text-decoration:none}
-.notice-ticker-link-label{color:#fff;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+.notice-ticker-category{display:inline-flex;align-items:center;padding:3px 8px;border-radius:5px;background:#d72d35;color:#fff;font-size:12px;font-weight:850}
+.notice-ticker-title{font-weight:650}
+.notice-ticker-link-label{color:#fff;text-decoration:underline;text-underline-offset:3px;font-weight:800;cursor:pointer}
 @keyframes noticeTickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.notice-ticker-track{animation:none;white-space:normal;flex-wrap:wrap;padding:10px;gap:12px}}
 @media(max-width:620px){.notice-ticker{padding:0 12px;margin-bottom:16px}.notice-ticker-label{padding:9px 10px;font-size:12px}.notice-ticker-item{font-size:13px}}
@@ -158,7 +160,7 @@ body.menu-open{overflow:hidden}
    const {data:setting,error:settingError}=await supabaseClient.from('site_feature_settings').select('enabled').eq('feature_key','breaking_news_ticker').maybeSingle();
    if(settingError)throw settingError;
    if(setting&&setting.enabled===false){wrap.hidden=true;track.replaceChildren();return}
-   const {data,error}=await supabaseClient.from('site_content').select('id,title,body,link_url,source_type,source_id,status,publish_at,expires_at,sort_order,display_label,created_at').eq('section','breaking-news').eq('status','published').order('sort_order').order('created_at',{ascending:false});
+   const {data,error}=await supabaseClient.from('site_content').select('id,section,title,body,link_url,source_type,source_id,status,publish_at,expires_at,sort_order,display_label,created_at').in('section',['breaking-news','important-links']).eq('status','published').order('sort_order').order('created_at',{ascending:false});
    if(error)throw error;
    const rows=(data||[]).filter(n=>(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
    if(!rows.length){wrap.hidden=true;track.replaceChildren();return}
@@ -174,14 +176,18 @@ body.menu-open{overflow:hidden}
     if(!target)return '';
     try{const u=new URL(target,location.href);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(e){return ''}
    }
+   function categoryLabel(n){
+    const chosen=(n.display_label||'').trim();
+    if(chosen&&!/বিস্তারিত|পড়ুন|দেখুন/i.test(chosen))return chosen;
+    return n.section==='important-links'?'গুরুত্বপূর্ণ তথ্য':'ব্রেকিং নিউজ';
+   }
    const makeItem=n=>{
+    const item=document.createElement('span');item.className='notice-ticker-item';
+    const mark=document.createElement('span');mark.className='notice-ticker-mark';mark.setAttribute('aria-hidden','true');mark.textContent='◆';item.append(mark);
+    const category=document.createElement('strong');category.className='notice-ticker-category';category.textContent=categoryLabel(n);item.append(category);
+    const title=document.createElement('span');title.className='notice-ticker-title';title.textContent=n.title||'আপডেট';item.append(title);
     const target=safeTarget(n);
-    const item=document.createElement(target?'a':'span');item.className='notice-ticker-item';
-    const displayType=(n.display_label||'').trim()|| (target?'বিস্তারিত দেখুন':'নোটিশ');
-    if(target){item.href=target;item.target='_blank';item.rel='noopener noreferrer';item.setAttribute('aria-label',(n.title||'আপডেট')+' — '+displayType)}
-    const mark=document.createElement('span');mark.setAttribute('aria-hidden','true');mark.textContent='◆';item.append(mark);
-    const copy=document.createElement('span');copy.textContent=(n.title||'')+(n.body?' — '+n.body:'');item.append(copy);
-    const label=document.createElement('span');label.className='notice-ticker-link-label';label.textContent=displayType;item.append(label);
+    if(target){const detail=document.createElement('a');detail.className='notice-ticker-link-label';detail.href=target;detail.target='_blank';detail.rel='noopener noreferrer';detail.textContent='বিস্তারিত দেখুন';detail.setAttribute('aria-label',(n.title||'আপডেট')+' — বিস্তারিত দেখুন');item.append(detail);}
     return item;
    };
    track.replaceChildren();
