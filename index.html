@@ -162,7 +162,7 @@ body.menu-open{overflow:hidden}
    if(setting&&setting.enabled===false){wrap.hidden=true;track.replaceChildren();return}
    const {data,error}=await supabaseClient.from('site_content').select('id,section,title,body,link_url,attachments,content_type,source_type,source_id,status,publish_at,expires_at,sort_order,display_label,created_at').in('section',['breaking-news','important-links']).eq('status','published').order('sort_order').order('created_at',{ascending:false});
    if(error)throw error;
-   const rows=(data||[]).filter(n=>(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
+   const rows=(data||[]).filter(n=>(n.title||'').trim()&&(!n.publish_at||n.publish_at<=now)&&(!n.expires_at||n.expires_at>now));
    if(!rows.length){wrap.hidden=true;track.replaceChildren();return}
    const unresolvedMaterialIds=[...new Set(rows.filter(n=>!(n.link_url||'').trim()&&n.source_type==='study_materials'&&n.source_id).map(n=>n.source_id))];
    let materialDepartmentById={};
@@ -187,9 +187,9 @@ body.menu-open{overflow:hidden}
     const item=document.createElement('span');item.className='notice-ticker-item';
     const mark=document.createElement('span');mark.className='notice-ticker-mark';mark.setAttribute('aria-hidden','true');mark.textContent='◆';item.append(mark);
     const category=document.createElement('strong');category.className='notice-ticker-category';category.textContent=categoryLabel(n);item.append(category);
-    const title=document.createElement('span');title.className='notice-ticker-title';title.textContent=n.title||'আপডেট';item.append(title);
+    const title=document.createElement('span');title.className='notice-ticker-title';title.textContent=n.title.trim();item.append(title);
     const target=safeTarget(n);
-    if(target){const detail=document.createElement('a');detail.className='notice-ticker-link-label';detail.href=target;detail.target='_blank';detail.rel='noopener noreferrer';detail.textContent='বিস্তারিত দেখুন';detail.setAttribute('aria-label',(n.title||'আপডেট')+' — বিস্তারিত দেখুন');item.append(detail);}
+    if(target){const detail=document.createElement('a');detail.className='notice-ticker-link-label';detail.href=target;detail.target='_blank';detail.rel='noopener noreferrer';detail.textContent='বিস্তারিত দেখুন';detail.setAttribute('aria-label',n.title.trim()+' — বিস্তারিত দেখুন');item.append(detail);}
     return item;
    };
    track.replaceChildren();
