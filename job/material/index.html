@@ -9,7 +9,7 @@
 .materials-index tbody tr:nth-child(even) td{background:#f7f8f6}
 .materials-index tbody tr:hover td{background:#eef5f8}
 .materials-index .index-number{width:72px;text-align:center;font-weight:800;color:#294e66}
-.materials-index .index-title{font-weight:650;text-align:left;overflow-wrap:anywhere}
+.materials-index .index-title{font-weight:650;text-align:left;overflow-wrap:anywhere}\n.material-index-link{color:#174b6b;text-decoration:none;font-weight:800}.material-index-link:hover{color:#0f766e;text-decoration:underline}
 .materials-index .index-action{width:116px;text-align:center}
 .materials-index .toc-open{display:inline-block;padding:7px 12px;border:1px solid #8da7b8;border-radius:3px;background:#f0f5f8;color:#174b6b;text-decoration:none;font-size:13px;font-weight:800;white-space:nowrap}
 .materials-index .toc-open:hover{background:#dceaf1}
@@ -65,9 +65,9 @@ function render(){
   return;
  }
  $('status').textContent=groups.length?'মোট '+groups.length+'টি উপকরণ • সূচিপত্র':'কোনো উপকরণ পাওয়া যায়নি।';
- $('list').innerHTML='<div class="materials-index-wrap"><table class="materials-index"><caption>সূচিপত্র</caption><colgroup><col style="width:72px"><col><col style="width:116px"></colgroup><thead><tr><th scope="col">ক্রমিক</th><th scope="col">স্টাডি ম্যাটেরিয়ালের নাম</th><th scope="col">বিস্তারিত</th></tr></thead><tbody>'+groups.map(g=>{
+ $('list').innerHTML='<div class="materials-index-wrap"><table class="materials-index"><caption>সূচিপত্র</caption><colgroup><col style="width:72px"><col></colgroup><thead><tr><th scope="col">ক্রমিক</th><th scope="col">স্টাডি ম্যাটেরিয়ালের নাম</th></tr></thead><tbody>'+groups.map(g=>{
   const x=g.first,number=bnNumber(x.postNumber||1),url='/job/material/'+encodeURIComponent(x.id);
-  return '<tr><td class="index-number">'+number+'</td><td class="index-title">'+esc(x.title)+'</td><td class="index-action"><a class="toc-open" href="'+url+'">বিস্তারিত</a></td></tr>';
+  return '<tr><td class="index-number">'+number+'</td><td class="index-title"><a class="material-index-link" href="'+url+'">'+esc(x.title)+'</a></td></tr>';
  }).join('')+'</tbody></table></div>';
 }
 async function init(){const {data,error}=await sb.from('study_materials').select('id,title,description,material_type,file_path,content_text,category,department,folder_name,display_order,created_at,category_id,subcategory_id,chapter_id,set_id,published').eq('published',true).eq('department','job_care').order('created_at',{ascending:false}).order('id',{ascending:false});if(error){$('status').textContent='স্টাডি ম্যাটেরিয়াল লোড করা যায়নি। পরে আবার চেষ্টা করুন।';return}const tax=await sb.from('study_material_taxonomy').select('id,name,parent_id,node_type,display_order').eq('department','job_care').order('display_order').order('name');taxonomyNodes=tax.data||[];const byId=id=>taxonomyNodes.find(n=>String(n.id)===String(id));items=(data||[]).map(x=>({...x,taxonomyPath:[x.category_id,x.subcategory_id,x.set_id].filter(Boolean).map(byId).filter(Boolean).map(n=>n.name).join(' › ')}));assignPostNumbers(items);fillSelect('categoryFilter',taxonomyNodes.filter(n=>n.node_type==='category').map(n=>({value:String(n.id),label:n.name})),'সব ক্যাটাগরি');updateSubcategoryOptions();render()}
