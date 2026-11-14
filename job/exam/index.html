@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1d4ed8"><title>জব কেয়ার — পরীক্ষার সূচিপত্র | ফেসবুক পাঠশালা</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172b3a;font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif}.header{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;text-align:center;padding:24px 14px}.header a{color:#fff;text-decoration:none}.header h1{font-size:25px;margin:0 0 7px}.header p{font-size:13px;margin:0;opacity:.92}.container{max-width:850px;margin:24px auto;padding:0 14px 32px}.card{background:#fff;border:1px solid #dce7f5;border-radius:14px;padding:20px;box-shadow:0 4px 15px #0000000b}h2{font-size:19px;text-align:center;color:#1d4ed8;margin:0 0 16px}.status{padding:12px 14px;border-radius:8px;background:#eff6ff;color:#1d4ed8;line-height:1.7;margin-bottom:14px}.status.success{background:#f0fdf4;color:#15803d}.status.error{background:#fef2f2;color:#b91c1c}.table-wrap{width:100%;overflow-x:auto;border:2px solid #526b7c;border-radius:4px}table{width:100%;min-width:480px;border-collapse:collapse;table-layout:fixed;background:#fff;color:#172b3a}caption{caption-side:top;padding:12px 10px;background:#f4f0e6;color:#253f50;font-size:17px;font-weight:800;border-bottom:1px solid #9aabb6}th,td{border:1px solid #8497a5;padding:13px 12px;vertical-align:middle;font-size:14px;line-height:1.65}th{background:#e7edf1;color:#183b52;text-align:center;font-weight:800;border-bottom:2px solid #526b7c}tbody tr:nth-child(even) td{background:#f7f8f6}tbody tr:hover td{background:#eef5f8}.number{width:72px;text-align:center;font-weight:800;color:#294e66}.exam-title{font-weight:700;text-align:left;overflow-wrap:anywhere}.exam-link{color:#174b6b;text-decoration:none;font-weight:800}.exam-link:hover{text-decoration:underline;color:#0f766e}.exam-id{margin-top:3px;font-size:12px;color:#64748b;font-weight:500}.exam-state{width:125px;text-align:center}.chip{display:inline-block;padding:7px 12px;border:1px solid #8db99b;border-radius:3px;background:#e8f5ed;color:#17633a;font-size:13px;font-weight:800;white-space:nowrap}.back{display:inline-block;margin-top:16px;color:#1d4ed8;text-decoration:none;font-size:13px;font-weight:700}@media(max-width:520px){.card{padding:14px}th,td{padding:10px 9px;font-size:12px}.number{width:58px}.exam-state{width:105px}}
+</style></head>
+<body><header class="header"><a href="/"><h1>📚 ফেসবুক পাঠশালা</h1></a><p>জব কেয়ার • অনলাইন MCQ পরীক্ষা</p></header>
+<main class="container"><section class="card"><h2>📋 চলমান পরীক্ষাসমূহ</h2><div id="listStatus" class="status" role="status">পরীক্ষার তালিকা লোড হচ্ছে...</div><div id="examTable"></div><a class="back" href="/">← মূল পাতায় ফিরে যান</a></section></main>
+<script>
+(function(){
+ const client=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");
+ const bn=value=>String(value).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
+ const status=document.getElementById("listStatus"),host=document.getElementById("examTable");
+ function cell(row,value,className){const td=document.createElement("td");if(className)td.className=className;td.textContent=value;row.append(td);return td}
+ async function load(){try{
+  const {data,error}=await client.from("exams").select("id,exam_name,status").order("id",{ascending:false});if(error)throw error;
+  const rows=(data||[]).filter(item=>String(item.status||"").trim().toLowerCase()==="active");
+  if(!rows.length){status.textContent="এই মুহূর্তে কোনো চলমান পরীক্ষা নেই।";host.replaceChildren();return}
+  status.className="status success";status.textContent=bn(rows.length)+"টি চলমান পরীক্ষা পাওয়া গেছে।";
+  const wrap=document.createElement("div");wrap.className="table-wrap";const table=document.createElement("table");
+  const caption=document.createElement("caption");caption.textContent="সূচিপত্র";table.append(caption);
+  const colgroup=document.createElement("colgroup"),col1=document.createElement("col"),col2=document.createElement("col"),col3=document.createElement("col");col1.style.width="72px";col3.style.width="125px";colgroup.append(col1,col2,col3);table.append(colgroup);
+  const thead=document.createElement("thead"),headRow=document.createElement("tr");["ক্রমিক","পরীক্ষার নাম","পরীক্ষার স্ট্যাটাস"].forEach(label=>{const th=document.createElement("th");th.scope="col";th.textContent=label;headRow.append(th)});thead.append(headRow);table.append(thead);
+  const tbody=document.createElement("tbody");rows.forEach((item,index)=>{const tr=document.createElement("tr");cell(tr,bn(index+1),"number");const titleCell=cell(tr,"","exam-title");const link=document.createElement("a");link.className="exam-link";link.href="/job/exam/"+encodeURIComponent(item.id);link.textContent=item.exam_name||"নামহীন পরীক্ষা";titleCell.append(link);const id=document.createElement("div");id.className="exam-id";id.textContent="পরীক্ষা আইডি: "+bn(item.id);titleCell.append(id);const state=cell(tr,"","exam-state");const chip=document.createElement("span");chip.className="chip";chip.textContent="চালু";state.append(chip);tbody.append(tr)});
+  table.append(tbody);wrap.append(table);host.replaceChildren(wrap);
+ }catch(error){status.className="status error";status.textContent="পরীক্ষার তালিকা লোড করা যায়নি। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।";console.error("Exam list loading failed:",error)}}
+ load();
+})();
+</script></body></html>
