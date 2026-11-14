@@ -281,13 +281,28 @@ main.wrap{padding-top:24px}
     db.auth.onAuthStateChange(function(_event,session){showSession(session);if(session)loadDashboardStats();});
   }
   form.addEventListener('submit',async function(e){
-    e.preventDefault();msg.textContent='লগইন হচ্ছে...';button.disabled=true;
+    e.preventDefault();
+    if(button.disabled)return;
+    msg.textContent='লগইন হচ্ছে...';button.disabled=true;
+    let timeoutId;
     try{
-      const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('centralEmail').value.trim(),password:document.getElementById('centralPassword').value});
-      if(error) throw error;
-      showSession(data.session);loadDashboardStats();openRequestedSection();document.getElementById('centralPassword').value='';
-    }catch(error){msg.textContent=error&&error.message?error.message:'লগইন করা যায়নি। ইমেইল ও পাসওয়ার্ড যাচাই করুন.';}
-    finally{button.disabled=false;}
+      if(!window.db||!window.db.auth||typeof window.db.auth.signInWithPassword!=='function'){
+        throw new Error('লগইন সেবা লোড হয়নি। পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।');
+      }
+      const loginRequest=window.db.auth.signInWithPassword({email:document.getElementById('centralEmail').value.trim(),password:document.getElementById('centralPassword').value});
+      const timeout=new Promise(function(_,reject){timeoutId=setTimeout(function(){reject(new Error('সার্ভারের উত্তর পাওয়া যাচ্ছে না। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।'))},20000)});
+      const result=await Promise.race([loginRequest,timeout]);
+      clearTimeout(timeoutId);
+      if(result.error)throw result.error;
+      if(!result.data||!result.data.session)throw new Error('লগইন নিশ্চিত করা যায়নি। আবার চেষ্টা করুন।');
+      showSession(result.data.session);
+      document.getElementById('centralPassword').value='';
+      msg.textContent='লগইন সফল হয়েছে।';
+      loadDashboardStats();openRequestedSection();
+    }catch(error){
+      if(timeoutId)clearTimeout(timeoutId);
+      msg.textContent=error&&error.message?error.message:'লগইন করা যায়নি। ইমেইল ও পাসওয়ার্ড যাচাই করুন।';
+    }finally{button.disabled=false;}
   });
   document.getElementById('centralLogout').addEventListener('click',async function(){
     const {error}=await db.auth.signOut();
