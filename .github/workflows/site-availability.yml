@@ -2,7 +2,7 @@ name: Website Availability Monitor
 
 on:
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -14,55 +14,95 @@ concurrency:
 
 jobs:
   check-site:
-    name: Check public website routes
+    name: Check public website and Job Care images
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
-      - name: Check homepage, exams, and study materials
+      - name: Check public page routes
         shell: bash
         run: |
-          set -uo pipefail
+          set -euo pipefail
           urls=(
             "https://fbpathshala.github.io/"
             "https://fbpathshala.github.io/exam/"
             "https://fbpathshala.github.io/study-material/"
+            "https://fbpathshala.github.io/job/material/"
           )
-          failed=0
-
           for url in "${urls[@]}"; do
             echo "Checking $url"
-            error_file="$(mktemp)"
-            set +e
-            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --connect-timeout 15 --max-time 45 --retry 2 --retry-delay 5 "$url" 2>"$error_file")"
-            curl_exit=$?
-            set -e
-
-            if [[ "$curl_exit" -ne 0 ]]; then
-              case "$curl_exit" in
-                5|6)
-                  echo "::error::DNS error for $url (curl exit $curl_exit)."
-                  ;;
-                7|28|35|52|55|56)
-                  echo "::error::Connection/TLS/timeout error for $url (curl exit $curl_exit)."
-                  ;;
-                *)
-                  echo "::error::Request/network error for $url (curl exit $curl_exit)."
-                  ;;
-              esac
-              cat "$error_file"
-              failed=1
-            elif [[ "$code" != "200" ]]; then
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --connect-timeout 15 --max-time 45 --retry 2 --retry-delay 5 "$url")"
+            if [[ "$code" != "200" ]]; then
               echo "::error::HTTP error for $url: expected 200, got $code."
-              failed=1
-            else
-              echo "OK: $url returned HTTP 200."
+              exit 1
             fi
-
-            rm -f "$error_file"
+            echo "OK: $url returned HTTP 200."
           done
 
-          if [[ "$failed" -ne 0 ]]; then
-            echo "::error::One or more website checks failed."
-            exit 1
-          fi
-          echo "All website routes returned HTTP 200."
+      - name: Install browser test
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Verify anonymous Job Care page, Supabase data, and all six images
+        shell: bash
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage();
+            const failures = [];
+            page.on('pageerror', error => failures.push('Page error: ' + error.message));
+            page.on('requestfailed', request => failures.push('Request failed: ' + request.url() + ' — ' + request.failure()?.errorText));
+
+            try {
+              const response = await page.goto(
+                'https://fbpathshala.github.io/job/material/#material-34',
+                { waitUntil: 'domcontentloaded', timeout: 60000 }
+              );
+              if (!response || response.status() !== 200) {
+                throw new Error('Job Care detail route did not return HTTP 200.');
+              }
+
+              const detail = page.locator('.detail-view');
+              await detail.waitFor({ state: 'visible', timeout: 60000 });
+
+              const title = await detail.locator('h2').innerText();
+              if (!title.includes('মাদকদ্রব্য নিয়ন্ত্রণ অধিদপ্তরের পরিদর্শক পদের প্রশ্নের সমাধান')) {
+                throw new Error('Unexpected material title: ' + title);
+              }
+
+              const images = detail.locator('.image-gallery img');
+              const count = await images.count();
+              if (count !== 6) {
+                throw new Error('Expected 6 public images, found ' + count + '.');
+              }
+
+              for (let i = 0; i < count; i++) {
+                await images.nth(i).evaluate(img => {
+                  if (img.complete && img.naturalWidth > 0) return true;
+                  return new Promise((resolve, reject) => {
+                    img.addEventListener('load', () => resolve(true), { once: true });
+                    img.addEventListener('error', () => reject(new Error('Image failed: ' + img.src)), { once: true });
+                    setTimeout(() => reject(new Error('Image timeout: ' + img.src)), 60000);
+                  });
+                });
+                const src = await images.nth(i).getAttribute('src');
+                const width = await images.nth(i).evaluate(img => img.naturalWidth);
+                console.log('IMAGE OK ' + (i + 1) + '/6 — ' + width + 'px — ' + src);
+              }
+
+              if (failures.length) {
+                throw new Error(failures.join('\n'));
+              }
+              console.log('SUCCESS: Anonymous browser loaded the Job Care page, Supabase material, and all 6 images.');
+            } finally {
+              await browser.close();
+            }
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
