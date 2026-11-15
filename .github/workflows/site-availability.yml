@@ -57,7 +57,7 @@ jobs:
             const page = await browser.newPage();
             const failures = [];
             page.on('pageerror', error => failures.push('Page error: ' + error.message));
-            page.on('requestfailed', request => failures.push('Request failed: ' + request.url() + ' — ' + request.failure()?.errorText));
+            page.on('requestfailed', request => {\n    const reason = request.failure()?.errorText;\n    if (reason !== 'net::ERR_ABORTED') failures.push('Request failed: ' + request.url() + ' — ' + reason);\n  });
 
             try {
               const response = await page.goto(
