@@ -193,6 +193,90 @@ main.wrap{padding-top:24px}
 .visitors-group .stat-pair strong{font-size:clamp(22px,2.8vw,32px);color:#fff}
 .visitors-group .stat-pair small{font-size:10px;line-height:1.4;color:#ffffffdf}
 @media(max-width:480px){.visitors-group .stat-pair{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.visitors-group .stat-pair .stat-card{padding:10px;min-height:120px}.visitors-group .stat-pair .stat-label{font-size:11px}}
+
+
+/* Mobile statistics layout: full-width groups with compact horizontal counters. */
+@media (max-width: 760px) {
+  .stats-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px;
+  }
+  .stat-group {
+    padding: 13px;
+  }
+  .stat-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+  .stat-pair .stat-card {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 9px;
+    row-gap: 3px;
+    min-width: 0;
+    min-height: 78px;
+    padding: 10px;
+  }
+  .stat-pair .stat-card .stat-icon {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    font-size: 18px;
+  }
+  .stat-pair .stat-card .stat-label {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 0;
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.35;
+    overflow-wrap: normal;
+  }
+  .stat-pair .stat-card strong {
+    grid-column: 2;
+    grid-row: 2;
+    display: block;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    font-size: clamp(20px, 4vw, 27px);
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+  .visitors-group .stat-pair .stat-card {
+    grid-template-rows: auto auto auto;
+    min-height: 94px;
+  }
+  .visitors-group .stat-pair .stat-card .stat-icon {
+    grid-row: 1 / span 3;
+  }
+  .visitors-group .stat-pair .stat-label {
+    grid-row: 1;
+  }
+  .visitors-group .stat-pair .stat-card strong {
+    grid-row: 2;
+  }
+  .visitors-group .stat-pair .stat-card small {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+}
+@media (max-width: 380px) {
+  .stat-group-heading strong { font-size: 14px; }
+  .stat-pair { gap: 7px; }
+  .stat-pair .stat-card { padding: 8px; column-gap: 7px; }
+  .stat-pair .stat-card .stat-label { font-size: 10px; }
+  .stat-pair .stat-card strong { font-size: 20px; }
+}
+
 </style>
 
 </head>
